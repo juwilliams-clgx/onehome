@@ -1,0 +1,37 @@
+// Uses shared .overlay / .dialog / .btn classes from global styles.scss.
+
+.dialog--capacity {
+  max-width: 420px;
+  text-align: center;
+}
+
+.capacity__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: #fff7ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  app-icon {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.dialog--capacity .dialog__title {
+  text-align: center;
+}
+
+.dialog--capacity .dialog__body {
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+.dialog--capacity .dialog__actions {
+  justify-content: center;
+}

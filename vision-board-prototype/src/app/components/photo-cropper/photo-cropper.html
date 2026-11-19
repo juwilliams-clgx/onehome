@@ -1,0 +1,101 @@
+<div class="pc">
+  <header class="pc__header">
+    <button class="pc__icon-btn" (click)="close()" aria-label="Close cropper">
+      <app-icon name="close" color="#fff" />
+    </button>
+    <div class="pc__title-group">
+      <span class="pc__title">{{ title }}</span>
+      @if (stepLabel) {
+        <span class="pc__step">{{ stepLabel }}</span>
+      }
+    </div>
+    <button class="pc__icon-btn" (click)="rotate()" aria-label="Rotate photo 90 degrees">
+      <app-icon name="rotate" color="#fff" />
+    </button>
+  </header>
+
+  <p class="pc__instructions">
+    <span class="pc__instructions--touch">Pinch to zoom &middot; drag to reposition the photo</span>
+    <span class="pc__instructions--pointer">Scroll or drag the slider to zoom &middot; click and drag to reposition</span>
+  </p>
+
+  <div class="pc__stage">
+    <button
+      class="pc__nav pc__nav--prev"
+      [class.pc__nav--hidden]="!canPrev"
+      [disabled]="!canPrev"
+      (click)="goPrev()"
+      aria-label="Previous photo"
+    >
+      <app-icon name="chevron-left" color="#fff" />
+    </button>
+
+    <div
+      #frame
+      class="pc__frame"
+      [style.aspect-ratio]="aspectRatio"
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerUp($event)"
+      (wheel)="onWheel($event)"
+      (dblclick)="onDoubleClick($event)"
+    >
+      @if (ready()) {
+        <img
+          class="pc__image"
+          [src]="workingSrc()"
+          draggable="false"
+          alt=""
+          [style.transform]="transform()"
+        />
+        <div class="pc__grid" [class.pc__grid--visible]="gridVisible() || isPanning()">
+          <span class="pc__grid-line pc__grid-line--v1"></span>
+          <span class="pc__grid-line pc__grid-line--v2"></span>
+          <span class="pc__grid-line pc__grid-line--h1"></span>
+          <span class="pc__grid-line pc__grid-line--h2"></span>
+        </div>
+        <div class="pc__frame-border"></div>
+      } @else {
+        <div class="pc__loading">Loading photo…</div>
+      }
+    </div>
+
+    <button
+      class="pc__nav pc__nav--next"
+      [class.pc__nav--hidden]="!canNext"
+      [disabled]="!canNext"
+      (click)="goNext()"
+      aria-label="Next photo"
+    >
+      <app-icon name="chevron-right" color="#fff" />
+    </button>
+  </div>
+
+  <div class="pc__controls">
+    <button class="pc__zoom-btn" (click)="nudgeZoom(-12)" aria-label="Zoom out">
+      <app-icon name="zoom-out" color="#fff" />
+    </button>
+    <input
+      class="pc__slider"
+      type="range"
+      min="0"
+      max="100"
+      step="0.1"
+      [value]="zoomPercent()"
+      (input)="onZoomSlider($any($event.target).valueAsNumber)"
+      aria-label="Zoom level"
+    />
+    <button class="pc__zoom-btn" (click)="nudgeZoom(12)" aria-label="Zoom in">
+      <app-icon name="zoom-in" color="#fff" />
+    </button>
+  </div>
+
+  <footer class="pc__footer">
+    <button class="pc__text-btn" (click)="resetCrop()">Reset</button>
+    <button class="pc__apply-btn" (click)="close()">
+      <app-icon name="check" color="#fff" />
+      Use this crop
+    </button>
+  </footer>
+</div>

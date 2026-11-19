@@ -1,0 +1,157 @@
+<div class="viewer">
+  <div class="viewer__tabs-bar">
+    <div class="viewer__tabs">
+      <span
+        class="viewer__tab"
+        [class.viewer__tab--active]="activeTab() === 'gallery'"
+        (click)="selectTab('gallery')"
+      >
+        Gallery
+      </span>
+      <span class="viewer__tab" [class.viewer__tab--active]="activeTab() === 'photos'" (click)="selectTab('photos')">
+        Photos
+      </span>
+      <span
+        class="viewer__tab"
+        [class.viewer__tab--active]="activeTab() === 'reimagine'"
+        (click)="selectTab('reimagine')"
+      >
+        Reimagine Space
+      </span>
+      <span
+        class="viewer__tab"
+        [class.viewer__tab--active]="activeTab() === 'floorplan'"
+        (click)="selectTab('floorplan')"
+      >
+        Floor Plan
+      </span>
+      <span
+        class="viewer__tab"
+        [class.viewer__tab--active]="activeTab() === 'visionboard'"
+        (click)="selectTab('visionboard')"
+      >
+        Vision Board ({{ visionBoard.pinnedPhotos().length }}/{{ maxPinned }})
+      </span>
+    </div>
+    <span class="viewer__address">890 Park Lane, San Francisco, CA 93108</span>
+  </div>
+
+  @if (activeTab() === 'gallery') {
+    <div class="viewer__card viewer__card--grid">
+      <app-photo-grid [photos]="galleryPhotos" (photoSelected)="viewPhoto($event)" />
+    </div>
+  } @else if (activeTab() === 'photos') {
+    <div class="viewer__card">
+      <div class="viewer__stage">
+        <div class="viewer__actions">
+          <button type="button" class="chip" (click)="startReimagine(currentPhoto())">
+            <app-icon name="reimagine" /> Reimagine Space
+          </button>
+          <button type="button" class="chip" (click)="visionBoard.searchSimilarLook(currentPhoto())">
+            <app-icon name="camera" /> Search Similar Look
+          </button>
+          <button
+            type="button"
+            class="chip"
+            [class.chip--active]="visionBoard.isPinned(currentPhoto())"
+            (click)="togglePin()"
+          >
+            @if (visionBoard.isPinned(currentPhoto())) {
+              <app-icon name="unpin" /> Unpin
+            } @else {
+              <app-icon name="pin" /> Pin
+            }
+          </button>
+        </div>
+
+        <button type="button" class="viewer__nav viewer__nav--prev" aria-label="Previous photo" (click)="prev()">
+          <app-icon name="chevron-left" color="#fff" />
+        </button>
+        <img class="viewer__image" [src]="currentPhoto().url" [alt]="currentPhoto().room" />
+        <button type="button" class="viewer__nav viewer__nav--next" aria-label="Next photo" (click)="next()">
+          <app-icon name="chevron-right" color="#fff" />
+        </button>
+      </div>
+
+      <div class="viewer__caption">
+        <div>
+          <strong>{{ currentPhoto().room }}</strong>
+          <p>{{ currentPhoto().caption }}</p>
+        </div>
+        <span class="viewer__counter">{{ index() + 1 }} / {{ photos.length }}</span>
+      </div>
+    </div>
+  } @else if (activeTab() === 'reimagine') {
+    <div class="viewer__card viewer__card--reimagine">
+      <div class="reimagine">
+        <h2 class="reimagine__title"><app-icon name="sparkle" /> Choose Your Space to Reimagine</h2>
+        <p class="reimagine__subtitle">
+          Pick a room, apply a style, and watch your space transform instantly.
+        </p>
+
+        @if (!reimagineRoom()) {
+          <div class="reimagine__rooms">
+            @for (room of photos; track room.id) {
+              <button type="button" class="reimagine__room" (click)="selectReimagineRoom(room)">
+                <img [src]="room.url" [alt]="room.room" />
+                <span>{{ room.room }}</span>
+              </button>
+            }
+          </div>
+        } @else if (!reimagineStyleId()) {
+          <div class="reimagine__step">
+            <img class="reimagine__preview" [src]="reimagineRoom()!.url" [alt]="reimagineRoom()!.room" />
+            <div class="reimagine__styles">
+              <p class="reimagine__step-label">Choose a style for the {{ reimagineRoom()!.room }}</p>
+              <div class="reimagine__style-list">
+                @for (style of reimagineStyles; track style.id) {
+                  <button type="button" class="chip" (click)="selectReimagineStyle(style)">
+                    {{ style.label }}
+                  </button>
+                }
+              </div>
+              <button type="button" class="reimagine__back" (click)="changeReimagineRoom()">
+                <app-icon name="chevron-left" /> Choose a different room
+              </button>
+            </div>
+          </div>
+        } @else if (reimagineLoading()) {
+          <div class="reimagine__loading">
+            <span class="spinner"></span>
+            <p>Reimagining your {{ reimagineRoom()!.room.toLowerCase() }}&hellip;</p>
+          </div>
+        } @else {
+          <div class="reimagine__result">
+            <div class="reimagine__compare">
+              <div class="reimagine__compare-item">
+                <span class="reimagine__compare-label">Before</span>
+                <img [src]="reimagineRoom()!.url" [alt]="reimagineRoom()!.room" />
+              </div>
+              <div class="reimagine__compare-item">
+                <span class="reimagine__compare-label">After</span>
+                <img [src]="reimaginedUrl()" [alt]="reimagineRoom()!.room + ' reimagined'" />
+              </div>
+            </div>
+            <div class="reimagine__result-actions">
+              <button type="button" class="btn btn--primary" (click)="pinReimagined()">Pin This Look</button>
+              <button type="button" class="reimagine__back" (click)="changeReimagineStyle()">
+                Try another style
+              </button>
+              <button type="button" class="reimagine__back" (click)="changeReimagineRoom()">
+                Choose a different room
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (activeTab() === 'floorplan') {
+    <div class="viewer__card viewer__card--grid">
+      <app-photo-grid [photos]="floorPlanPhotos" (photoSelected)="viewPhoto($event)" />
+    </div>
+  } @else if (activeTab() === 'visionboard') {
+    <div class="viewer__card">
+      <app-vision-board-panel />
+    </div>
+  }
+</div>

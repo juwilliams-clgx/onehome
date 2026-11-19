@@ -1,0 +1,26 @@
+.mockup {
+  padding-bottom: 40px;
+}
+
+.mockup__grid-heading {
+  font-size: 18px;
+  margin: 0 0 16px;
+}
+
+.mockup__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px 20px;
+}
+
+@media (max-width: 900px) {
+  .mockup__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .mockup__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,22 @@
+<div class="overlay" (click)="close()">
+  <div class="dialog dialog--capacity" (click)="$event.stopPropagation()">
+    <button type="button" class="dialog__close" aria-label="Close" (click)="close()">
+      <app-icon name="close" color="#52606d" />
+    </button>
+
+    <div class="capacity__icon">
+      <app-icon name="alert" color="#d97706" />
+    </div>
+
+    <h2 class="dialog__title">List Limit Reached</h2>
+    <p class="dialog__body">
+      You've reached the maximum limit of <strong>{{ limit.toLocaleString() }} properties</strong> for
+      <strong>{{ listName }}</strong>. Please remove items to add new ones.
+    </p>
+
+    <div class="dialog__actions">
+      <button type="button" class="btn btn--secondary" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn--primary" (click)="manageList()">Manage {{ listName }}</button>
+    </div>
+  </div>
+</div>

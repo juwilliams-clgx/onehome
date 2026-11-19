@@ -1,0 +1,98 @@
+<div class="property-card" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" (click)="openDetail()">
+  <div class="property-card__media">
+    <img [src]="listing.images[activeImage()]" [alt]="listing.address" />
+
+    <div class="property-card__badges">
+      @if (listing.visibility === 'LMTD') {
+        <span class="property-card__limited-exposure info-tooltip" tabindex="0">
+          <app-icon name="info" color="#425676" /> Limited Exposure
+          <span class="info-tooltip__bubble">This listing has limited public marketing exposure per the seller's request.</span>
+        </span>
+      }
+      @if (listing.status !== 'For Sale') {
+        <span class="property-card__status">{{ listing.status }}</span>
+      }
+    </div>
+
+    <div class="property-card__icon-row">
+      <button
+        type="button"
+        class="property-card__action"
+        aria-label="Show on map"
+        title="Show on map"
+        (mouseenter)="onMapIconEnter()"
+        (mouseleave)="onMapIconLeave()"
+        (click)="showOnMap($event)"
+      >
+        <app-icon name="layout-map" />
+      </button>
+      <button
+        type="button"
+        class="property-card__action"
+        [class.property-card__action--active]="isDisliked()"
+        [attr.aria-label]="isDisliked() ? 'Remove dislike' : 'Dislike'"
+        title="Dislike"
+        (click)="toggleDislike($event)"
+      >
+        <app-icon [name]="isDisliked() ? 'dislike-filled' : 'dislike'" />
+      </button>
+      <button
+        type="button"
+        class="property-card__action"
+        [class.property-card__action--active]="isFavorited()"
+        [attr.aria-label]="isFavorited() ? 'Remove favorite' : 'Add favorite'"
+        title="Favorite"
+        (click)="toggleFavorite($event)"
+      >
+        <app-icon [name]="isFavorited() ? 'heart-filled' : 'heart'" />
+      </button>
+    </div>
+
+    @if (listing.images.length > 1) {
+      <button type="button" class="property-card__nav property-card__nav--prev" aria-label="Previous photo" (click)="prevImage($event)">
+        <app-icon name="chevron-left" color="#fff" />
+      </button>
+      <button type="button" class="property-card__nav property-card__nav--next" aria-label="Next photo" (click)="nextImage($event)">
+        <app-icon name="chevron-right" color="#fff" />
+      </button>
+      <div class="property-card__dots">
+        @for (image of listing.images; track $index) {
+          <span class="property-card__dot" [class.property-card__dot--active]="$index === activeImage()"></span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="property-card__body">
+    <div class="property-card__price">{{ formatPrice(listing.price) }}</div>
+    <div class="property-card__stats">
+      <span>{{ listing.beds }} bd</span>
+      <span>{{ listing.baths }} ba</span>
+      <span>{{ listing.sqft.toLocaleString() }} sqft</span>
+      @if (freshnessLabel(); as label) {
+        <span class="property-card__freshness" [class.property-card__freshness--drop]="listing.priceDropped">
+          {{ label }}
+        </span>
+      }
+    </div>
+    <div class="property-card__address">{{ listing.address }}, {{ listing.cityStateZip }}</div>
+    <div class="property-card__footer">
+      @if (listing.isAgentPick) {
+        <span class="property-card__agent-pick">Agent Pick</span>
+      } @else {
+        <span></span>
+      }
+      <button
+        type="button"
+        class="property-card__compare"
+        [class.property-card__compare--active]="isCompared()"
+        (click)="toggleCompare($event)"
+      >
+        @if (isCompared()) {
+          <app-icon name="compare-swap" />
+        }
+        {{ isCompared() ? 'Added to Compare' : 'Compare' }}
+      </button>
+    </div>
+  </div>
+</div>

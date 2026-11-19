@@ -1,0 +1,272 @@
+<div class="detail">
+  <div class="detail__header">
+    <a routerLink="/" class="detail__back" aria-label="Back to search">
+      <app-icon name="chevron-left" color="#000" />
+    </a>
+    <span class="detail__address">{{ listing.address }}, {{ listing.cityStateZip }}</span>
+  </div>
+
+  <div class="detail__mosaic">
+    <div
+      class="detail__hero"
+      (click)="openGallery(activePhotoIndex())"
+      (touchstart)="onHeroTouchStart($event)"
+      (touchend)="onHeroTouchEnd($event)"
+      (mousedown)="onHeroPressStart()"
+      (mouseup)="onHeroPressEnd()"
+      (mouseleave)="onHeroPressEnd()"
+    >
+      <img [src]="listing.images[activePhotoIndex()]" [alt]="listing.address" />
+      <span class="detail__photo-count">{{ activePhotoIndex() + 1 }} / {{ listing.images.length }}</span>
+      @if (listing.visibility === 'LMTD') {
+        <span class="detail__limited-exposure info-tooltip" tabindex="0">
+          <app-icon name="info" color="#425676" /> Limited Exposure
+          <span class="info-tooltip__bubble">This listing has limited public marketing exposure per the seller's request.</span>
+        </span>
+      }
+      <button
+        type="button"
+        class="detail__nav detail__nav--back"
+        [class.detail__nav--boundary]="isFirstPhoto()"
+        aria-label="Previous photo"
+        (click)="prevPhoto($event)"
+      >
+        <app-icon name="chevron-left" color="#fff" />
+      </button>
+      <button
+        type="button"
+        class="detail__nav detail__nav--forward-hero"
+        [class.detail__nav--boundary]="isLastPhoto()"
+        aria-label="Next photo"
+        (click)="nextPhoto($event)"
+      >
+        <app-icon name="chevron-right" color="#fff" />
+      </button>
+      <div class="detail__hero-actions" [class.detail__hero-actions--visible]="actionsRevealed()">
+        <button type="button" class="icon-chip" aria-label="Reimagine Space" title="Reimagine Space" (click)="reimagine(activePhotoIndex(), $event)">
+          <app-icon name="reimagine" />
+        </button>
+        <button type="button" class="icon-chip" aria-label="Search Similar Look" title="Search Similar Look" (click)="searchSimilar(activePhotoIndex(), $event)">
+          <app-icon name="camera" />
+        </button>
+        <button
+          type="button"
+          class="icon-chip"
+          [attr.aria-label]="isPinned(activePhotoIndex()) ? 'Unpin' : 'Pin'"
+          [title]="isPinned(activePhotoIndex()) ? 'Unpin' : 'Pin'"
+          (click)="pin(activePhotoIndex(), $event)"
+        >
+          <app-icon [name]="isPinned(activePhotoIndex()) ? 'unpin' : 'pin'" />
+        </button>
+      </div>
+    </div>
+
+    <div class="detail__grid-wrap">
+      <div class="detail__grid">
+        @for (thumb of pagedThumbnails(); track thumb.index) {
+          <div class="detail__tile" (click)="openGallery(thumb.index)">
+            <img [src]="thumb.url" [alt]="listing.address" />
+            <div class="detail__tile-actions">
+              <button type="button" class="icon-chip" aria-label="Reimagine Space" title="Reimagine Space" (click)="reimagine(thumb.index, $event)">
+                <app-icon name="reimagine" />
+              </button>
+              <button type="button" class="icon-chip" aria-label="Search Similar Look" title="Search Similar Look" (click)="searchSimilar(thumb.index, $event)">
+                <app-icon name="camera" />
+              </button>
+              <button type="button" class="icon-chip" [attr.aria-label]="isPinned(thumb.index) ? 'Unpin' : 'Pin'" [title]="isPinned(thumb.index) ? 'Unpin' : 'Pin'" (click)="pin(thumb.index, $event)">
+                <app-icon [name]="isPinned(thumb.index) ? 'unpin' : 'pin'" />
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (totalThumbnailPages > 1) {
+        <button type="button" class="detail__nav detail__nav--forward" aria-label="Next photos" (click)="nextSet($event)">
+          <app-icon name="chevron-right" color="#fff" />
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="detail__summary">
+    <div class="detail__price">{{ formatPrice(listing.price) }}</div>
+    <div class="detail__stats">
+      {{ listing.beds }} bd &nbsp;&middot;&nbsp; {{ listing.baths }} ba &nbsp;&middot;&nbsp;
+      {{ listing.sqft.toLocaleString() }} sqft
+    </div>
+    <div class="detail__mls">MLS #{{ listing.mlsNumber }}</div>
+  </div>
+
+  <div class="detail__signals">
+    @if (listing.priceDropped) {
+      <span class="detail__signal detail__signal--highlight">Price Drop</span>
+    }
+    <span class="detail__signal">{{ listing.daysOnMarket }} days on OneHome</span>
+  </div>
+
+  <div class="detail__info">
+    <div class="detail__info-main">
+      <section class="detail__section">
+        <h2 class="detail__section-title">What's Special</h2>
+        <p class="detail__whats-special">{{ whatsSpecial() }}</p>
+      </section>
+
+      <section class="detail__section">
+        <h2 class="detail__section-title">About This Home</h2>
+        <p class="detail__description" [class.detail__description--expanded]="descriptionExpanded()">
+          {{ listing.description }}
+        </p>
+        <button type="button" class="detail__read-more" (click)="toggleDescription()">
+          {{ descriptionExpanded() ? 'Read Less' : 'Read More' }}
+        </button>
+      </section>
+
+      <section class="detail__section">
+        <h2 class="detail__section-title">Features</h2>
+        <div class="detail__facts">
+          <div class="detail__fact"><span>Type</span><strong>Single Family Residence</strong></div>
+          <div class="detail__fact"><span>Year Built</span><strong>{{ listing.yearBuilt }}</strong></div>
+          <div class="detail__fact"><span>Lot Size</span><strong>{{ listing.lotSizeAcres }} acres</strong></div>
+          <div class="detail__fact"><span>Garage Spaces</span><strong>{{ listing.garageSpaces }}</strong></div>
+          <div class="detail__fact"><span>County</span><strong>{{ listing.county }}</strong></div>
+          <div class="detail__fact"><span>Subdivision</span><strong>{{ listing.subdivision }}</strong></div>
+          <div class="detail__fact"><span>Status</span><strong>{{ listing.status }}</strong></div>
+        </div>
+      </section>
+
+      <section class="detail__section">
+        <h2 class="detail__section-title">Nearby Schools</h2>
+        <div class="detail__facts">
+          <div class="detail__fact"><span>Elementary School</span><strong>{{ listing.schools.elementary }}</strong></div>
+          <div class="detail__fact"><span>Middle School</span><strong>{{ listing.schools.middle }}</strong></div>
+          <div class="detail__fact"><span>High School</span><strong>{{ listing.schools.high }}</strong></div>
+        </div>
+      </section>
+
+      <section class="detail__section">
+        <h2 class="detail__section-title">Services &amp; Resources</h2>
+        <div class="detail__services">
+          <button type="button" class="detail__service">
+            <app-icon name="info" />
+            <span>Get Title Insurance</span>
+          </button>
+          <button type="button" class="detail__service">
+            <app-icon name="layout-table" />
+            <span>Get Mortgage Rates</span>
+          </button>
+          <button type="button" class="detail__service">
+            <app-icon name="alert" />
+            <span>Get Insurance Quotes</span>
+          </button>
+          <button type="button" class="detail__service">
+            <app-icon name="sparkle" />
+            <span>Estimate a Project</span>
+          </button>
+          <button type="button" class="detail__service">
+            <app-icon name="layout-map" />
+            <span>Neighborhood Insights</span>
+          </button>
+          <button type="button" class="detail__service">
+            <app-icon name="upload" />
+            <span>Manage My Home</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <aside class="detail__sidebar">
+      <div class="detail__estimate-card">
+        <div class="detail__estimate-label">Est. Monthly Payment</div>
+        <div class="detail__estimate-value">{{ formatPrice(monthlyTotal()) }}/mo</div>
+
+        <label class="detail__slider-row">
+          <span>Down payment</span>
+          <strong>{{ downPaymentPercent() }}% &middot; {{ formatPrice(downPaymentAmount()) }}</strong>
+          <input
+            type="range"
+            min="0"
+            max="50"
+            step="1"
+            [value]="downPaymentPercent()"
+            (input)="setDownPaymentPercent(+$any($event.target).value)"
+          />
+        </label>
+
+        <label class="detail__slider-row">
+          <span>Interest rate</span>
+          <strong>{{ interestRate() }}%</strong>
+          <input
+            type="range"
+            min="3"
+            max="9"
+            step="0.125"
+            [value]="interestRate()"
+            (input)="setInterestRate(+$any($event.target).value)"
+          />
+        </label>
+
+        <label class="detail__slider-row">
+          <span>Loan term</span>
+          <strong>{{ loanTermYears() }} years</strong>
+          <input
+            type="range"
+            min="10"
+            max="30"
+            step="5"
+            [value]="loanTermYears()"
+            (input)="setLoanTermYears(+$any($event.target).value)"
+          />
+        </label>
+
+        <div class="detail__estimate-breakdown">
+          <span>Principal &amp; interest</span><strong>{{ formatPrice(monthlyPrincipalAndInterest()) }}</strong>
+          <span>Taxes &amp; insurance (est.)</span><strong>{{ formatPrice(monthlyTaxesAndInsurance()) }}</strong>
+        </div>
+      </div>
+
+      <div class="detail__agent-card">
+        <div class="detail__agent-card-label">Contact Agent</div>
+        <div class="detail__agent-name">{{ agent.name }}</div>
+        <div class="detail__agent-title">{{ agent.title }}</div>
+        <div class="detail__agent-contact">{{ agent.phone }} &middot; {{ agent.email }}</div>
+        <button type="button" class="btn btn--primary detail__agent-btn" (click)="contactAgent()">Contact Agent</button>
+        <button type="button" class="btn btn--secondary detail__agent-btn" (click)="requestTour()">Request a Tour</button>
+      </div>
+
+      <div class="detail__assist-card">
+        <div class="detail__assist-label">Down Payment Assistance</div>
+        <p>
+          This property may qualify for <strong>{{ downPaymentPrograms() }}</strong> programs and up to
+          <strong>{{ formatPrice(downPaymentMaxAmount()) }}</strong> in down payment assistance.
+        </p>
+        <button type="button" class="detail__assist-link">See Programs</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="detail__mobile-bar">
+    <div class="detail__mobile-bar-price">{{ formatPrice(listing.price) }}</div>
+    <button type="button" class="btn btn--secondary detail__mobile-bar-btn" (click)="requestTour()">Tour</button>
+    <button type="button" class="btn btn--primary detail__mobile-bar-btn" (click)="contactAgent()">Contact Agent</button>
+  </div>
+</div>
+
+@if (galleryOpen()) {
+  <div class="gallery-feed" (click)="closeGallery()">
+    <div class="gallery-feed__header" (click)="$event.stopPropagation()">
+      <span class="gallery-feed__address">{{ listing.address }}, {{ listing.cityStateZip }}</span>
+      <span class="gallery-feed__count">{{ listing.images.length }} photos</span>
+      <button type="button" class="gallery-feed__close" aria-label="Close photos" (click)="closeGallery()">
+        <app-icon name="close" color="#000" />
+      </button>
+    </div>
+    <div class="gallery-feed__scroll" (click)="$event.stopPropagation()">
+      @for (img of listing.images; track $index) {
+        <div class="gallery-feed__photo" [id]="'gallery-photo-' + $index">
+          <img [src]="img" [alt]="listing.address" />
+        </div>
+      }
+    </div>
+  </div>
+}

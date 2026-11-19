@@ -1,0 +1,13 @@
+@if (!dismissed()) {
+  <div class="capacity-banner" role="alert">
+    <app-icon name="alert" color="#92650a" />
+    <span class="capacity-banner__message">
+      <strong>{{ listName }}</strong> has reached its {{ limit.toLocaleString() }} item limit. Remove items to
+      continue adding more.
+    </span>
+    <button type="button" class="capacity-banner__manage" (click)="manage.emit()">Manage {{ listName }}</button>
+    <button type="button" class="capacity-banner__dismiss" aria-label="Dismiss" (click)="dismissed.set(true)">
+      <app-icon name="close" color="#92650a" />
+    </button>
+  </div>
+}

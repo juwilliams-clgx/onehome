@@ -1,0 +1,67 @@
+<div class="search-header" [class.search-header--expanded]="searchExpanded()">
+  <button
+    type="button"
+    class="search-header__compare"
+    aria-label="Compare"
+    routerLink="/compare"
+  >
+    <app-icon name="compare-swap" />
+    @if (compare.count() > 0) {
+      <span class="search-header__badge">{{ compare.count() }}</span>
+    }
+  </button>
+
+  @if (!searchExpanded()) {
+    <button type="button" class="search-header__pill" (click)="toggleDropdown()">
+      <app-icon name="search" />
+      <span>{{ pillLabel() }}</span>
+      <app-icon name="chevron-down" class="search-header__chevron" [class.search-header__chevron--open]="dropdownOpen()" />
+    </button>
+
+    <button type="button" class="search-header__search-btn" aria-label="Search" (click)="expandSearch()">
+      <app-icon name="search" />
+    </button>
+  } @else {
+    <div class="search-header__field">
+      <app-icon name="search" />
+      <input
+        #searchInput
+        type="text"
+        [(ngModel)]="query"
+        placeholder="Address, neighborhood, city, zip…"
+      />
+      <button type="button" class="search-header__chip search-header__chip--camera" title="Search by photo" (click)="searchByPhoto()">
+        <app-icon name="camera" color="#f4a06d" />
+      </button>
+      <button type="button" class="search-header__chip search-header__chip--ai" title="AI Search" (click)="searchWithAi()">
+        <app-icon name="sparkle" color="#7c3aed" />
+      </button>
+      <button type="button" class="search-header__close" aria-label="Close search" (click)="collapseSearch()">
+        <app-icon name="close" />
+      </button>
+    </div>
+  }
+
+  @if (dropdownOpen()) {
+    <div class="search-header__backdrop" (click)="closeDropdown()"></div>
+    <div class="search-header__dropdown">
+      <div class="search-header__dropdown-section">
+        <h4>Your Agent's Saved Searches</h4>
+        @for (s of agentSearches; track s) {
+          <button type="button" class="search-header__dropdown-item" (click)="selectSearch(s)">{{ s }}</button>
+        }
+      </div>
+      <div class="search-header__dropdown-section">
+        <h4>Your Saved Searches</h4>
+        @for (s of mySearches(); track s.id) {
+          <div class="search-header__dropdown-row">
+            <button type="button" class="search-header__dropdown-item" (click)="selectSearch(s.label)">{{ s.label }}</button>
+            <button type="button" class="search-header__dropdown-remove" aria-label="Remove saved search" (click)="removeSearch(s.id)">
+              <app-icon name="close" />
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

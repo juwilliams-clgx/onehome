@@ -1,0 +1,55 @@
+<div
+  class="sheet-overlay"
+  [class.sheet-overlay--open]="open"
+  [attr.aria-hidden]="!open"
+  (click)="close()"
+>
+  <div class="sheet" [class.sheet--open]="open" (click)="$event.stopPropagation()">
+    <div class="sheet__handle"></div>
+
+    <div class="sheet__header">
+      <h2 class="sheet__title">Filter &amp; Sort</h2>
+      <button type="button" class="sheet__close" aria-label="Close" (click)="close()">
+        <app-icon name="close" />
+      </button>
+    </div>
+
+    <div class="sheet__scroll">
+      <section class="sheet__section">
+        <h3 class="sheet__section-title">Sort By</h3>
+        <div class="sheet__sort-list" role="radiogroup" aria-label="Sort by">
+          @for (option of sortOptions; track option) {
+            <button
+              type="button"
+              class="sheet__sort-option"
+              role="radio"
+              [attr.aria-checked]="option === sort"
+              [class.sheet__sort-option--active]="option === sort"
+              (click)="selectSort(option)"
+            >
+              {{ option }}
+              @if (option === sort) {
+                <app-icon name="chevron-down" class="sheet__sort-check" />
+              }
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="sheet__section">
+        <h3 class="sheet__section-title">Filters</h3>
+        <div class="sheet__filter-pills">
+          <button type="button" class="pill">For Sale</button>
+          <button type="button" class="pill">Price</button>
+          <button type="button" class="pill">Beds &amp; Baths</button>
+          <button type="button" class="pill">More Filters</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="sheet__footer">
+      <button type="button" class="btn btn--secondary">Save Search</button>
+      <button type="button" class="btn btn--primary" (click)="close()">Show Results</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+.vision-board__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .vision-board__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.vision-board__tile {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e4e7eb;
+  background: #f4f5f7;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.vision-board__unpin {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.vision-board__tile--upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e4e7eb;
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  app-icon {
+    font-size: 22px;
+  }
+}
+
+.vision-board__tile--dragging {
+  border-color: #1a56a0;
+  background: #eef4fb;
+}
+

@@ -1,0 +1,10 @@
+@if (toastService.toast(); as t) {
+  <div class="toast" role="status">
+    <span class="toast__icon">✓</span>
+    <span class="toast__message">{{ t.message }}</span>
+    @if (t.undo) {
+      <button type="button" class="toast__undo" (click)="onUndo()">Undo</button>
+    }
+    <button type="button" class="toast__close" aria-label="Dismiss" (click)="toastService.dismiss()">×</button>
+  </div>
+}

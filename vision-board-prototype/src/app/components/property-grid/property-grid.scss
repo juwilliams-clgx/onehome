@@ -1,0 +1,388 @@
+.browse {
+  padding-bottom: 8px;
+}
+
+.browse__search-header {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .browse__search-header {
+    display: block;
+    margin: -8px -12px 4px;
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #cbd2d9;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.pill:active {
+  transform: scale(0.96);
+}
+
+.pill--ghost {
+  background: transparent;
+}
+
+.pill--active {
+  background: #137a8f;
+  border-color: #137a8f;
+  color: #fff;
+}
+
+.browse__count {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.browse__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.browse__sort {
+  margin-left: auto;
+}
+
+/* Mobile-only condensed control row: Filter trigger, result count, layout toggle.
+   Hidden on larger viewports, where the full pill row below covers the same jobs. */
+.browse__mobile-bar {
+  display: none;
+}
+
+.browse__count--mobile {
+  font-size: 14px;
+  font-weight: 700;
+  color: #52606d;
+}
+
+.layout-picker {
+  position: relative;
+}
+
+.layout-picker__options {
+  display: flex;
+  gap: 8px;
+  transform-origin: right center;
+  animation: layout-picker-reveal 0.18s ease;
+}
+
+@keyframes layout-picker-reveal {
+  from {
+    opacity: 0;
+    transform: scaleX(0.7) translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1) translateX(0);
+  }
+}
+
+.browse__content {
+  padding: 24px 0 60px;
+}
+
+.browse__content--split {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding-right: 0;
+}
+
+.browse__content--split .browse__grid {
+  flex: 1 1 66%;
+  min-width: 0;
+  transition: flex-basis 0.2s ease;
+  /* Establishes its own stacking context so hover-expanded cards paint above the sibling map pane. */
+  position: relative;
+  z-index: 2;
+}
+
+.browse__content--wide.browse__content--split .browse__grid {
+  flex-basis: 34%;
+}
+
+.browse__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px 20px;
+}
+
+.browse__content--split .browse__grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.browse__content--wide.browse__content--split .browse__grid {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.browse__map {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 34%;
+  min-height: 480px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #cbd2d9;
+  transition: flex-basis 0.2s ease;
+}
+
+.browse__content--wide .browse__map {
+  flex-basis: 66%;
+}
+
+.browse__content--full .browse__map {
+  flex-basis: 100%;
+}
+
+.map__resize {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map__resize-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  app-icon {
+    font-size: 16px;
+  }
+}
+
+.map__toolbar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 1001;
+}
+
+.map__tool {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.browse__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e4e7eb;
+  }
+
+  th {
+    color: #000;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 640px) {
+  .browse__mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .browse__count--desktop,
+  .browse__filters {
+    display: none;
+  }
+
+  .browse__filter-trigger {
+    flex-shrink: 0;
+  }
+
+  .browse__count--mobile {
+    flex: 1;
+    text-align: center;
+  }
+
+  .layout-picker--mobile {
+    flex-shrink: 0;
+  }
+
+  /* Icon-only chips in a row didn't communicate what each view actually was;
+     a vertical dropdown with labels makes that unambiguous at a glance. */
+  .layout-picker__options--mobile {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    background: #fff;
+    padding: 6px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    z-index: 30;
+  }
+
+  .layout-picker__option-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .layout-picker__option-row:active {
+    background: #f4f5f7;
+  }
+
+  .layout-picker__option-row--active {
+    background: #137a8f;
+    color: #fff;
+  }
+
+  /* Dropping down below the trigger, not sliding out beside it, so the
+     horizontal scaleX reveal doesn't fit - fade + drop in from the top instead. */
+  .layout-picker__options--mobile {
+    transform-origin: top right;
+    animation: layout-picker-reveal-mobile 0.16s ease;
+  }
+
+  @keyframes layout-picker-reveal-mobile {
+    from {
+      opacity: 0;
+      transform: scaleY(0.85) translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  .browse__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .browse__content--split {
+    flex-direction: column;
+  }
+
+  .browse__content--split .browse__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .browse__sort {
+    margin-left: 0;
+  }
+
+  /*
+   * Mobile split view: a fixed, full-viewport, locked 50/50 of map over list
+   * (Zillow's layout), except the ratio never changes - on Zillow the list
+   * covers the map as you scroll; here the map keeps pace instead, panning
+   * to whichever card scrolled into view (see property-grid.ts), because the
+   * whole point of this view is always knowing where that home sits on the map.
+   */
+  .browse__content.browse__content--split {
+    position: fixed;
+    inset: var(--mobile-topbar-h, 56px) 0 0 0;
+    z-index: 5;
+    padding: 0;
+    gap: 0;
+    background: #f4f5f7;
+    /* The base rule sets flex-start for desktop's row layout (vertical
+       alignment there); in this column layout the same property otherwise
+       stops the map/list from stretching to full width. */
+    align-items: stretch;
+  }
+
+  .browse__content--split .browse__map,
+  .browse__content--split .browse__grid {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  /* Map stacks visually above the list (the template renders the list first
+     for desktop's row order - left list, right map - so this flips it for
+     mobile's column direction without touching the desktop markup order). */
+  .browse__content--split .browse__map {
+    order: 1;
+  }
+
+  .browse__content--split .browse__grid {
+    order: 2;
+  }
+
+  .browse__content--split .browse__map {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #cbd2d9;
+  }
+
+  .browse__content--split .browse__grid {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    padding: 14px;
+    scroll-snap-type: y proximity;
+  }
+
+  .browse__content--split .browse__grid > app-property-card {
+    display: block;
+    scroll-snap-align: start;
+    margin-bottom: 16px;
+  }
+
+  /* The desktop ratio control doesn't apply once the split is permanently 50/50. */
+  .browse__content--split .map__resize {
+    display: none;
+  }
+
+  .browse__content--split .map__toolbar {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+}

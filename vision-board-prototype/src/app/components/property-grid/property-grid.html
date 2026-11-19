@@ -1,0 +1,164 @@
+<div class="browse">
+  <app-search-header class="browse__search-header" />
+
+  <div class="browse__mobile-bar">
+    <button type="button" class="pill browse__filter-trigger" #filterTriggerBtn (click)="openFilterSheet()">
+      <app-icon name="sliders" /> Filter
+    </button>
+
+    <span class="browse__count browse__count--mobile">{{ listings.length }} Results</span>
+
+    <div class="layout-picker layout-picker--mobile">
+      @if (!layoutMenuOpen()) {
+        <button type="button" class="pill layout-picker__trigger" (click)="toggleLayoutMenu()">
+          <app-icon [name]="currentLayoutOption().icon" /> {{ currentLayoutOption().mobileLabel }}
+        </button>
+      } @else {
+        <div class="layout-picker__options layout-picker__options--mobile">
+          @for (option of layoutOptions; track option.value) {
+            <button
+              type="button"
+              class="layout-picker__option-row"
+              [class.layout-picker__option-row--active]="layout() === option.value"
+              (click)="selectLayout(option.value)"
+            >
+              <app-icon [name]="option.icon" />
+              <span>{{ option.mobileLabel }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <h2 class="browse__count browse__count--desktop">{{ listings.length }} Results</h2>
+
+  <div class="browse__filters">
+    <button type="button" class="pill">For Sale</button>
+    <button type="button" class="pill">Price</button>
+    <button type="button" class="pill">Beds &amp; Baths</button>
+    <button type="button" class="pill">Filters</button>
+    <button type="button" class="pill pill--ghost">Save Search</button>
+    <button type="button" class="pill pill--ghost browse__sort">Sort By: {{ sort() }}</button>
+
+    <div class="layout-picker" (mouseenter)="openLayoutMenu()" (mouseleave)="closeLayoutMenu()">
+      @if (!layoutMenuOpen()) {
+        <button type="button" class="pill layout-picker__trigger" (click)="toggleLayoutMenu()">
+          <app-icon [name]="currentLayoutOption().icon" /> {{ currentLayoutOption().label }}
+        </button>
+      } @else {
+        <div class="layout-picker__options">
+          @for (option of layoutOptions; track option.value) {
+            <button
+              type="button"
+              class="pill"
+              [class.pill--active]="layout() === option.value"
+              (click)="selectLayout(option.value)"
+            >
+              <app-icon [name]="option.icon" /> {{ option.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div
+    class="browse__content"
+    [class.browse__content--split]="layout() === 'split'"
+    [class.browse__content--wide]="layout() === 'split' && mapSplitSize() === 'wide'"
+    [class.browse__content--full]="layout() === 'split' && mapSplitSize() === 'full'"
+  >
+    @if ((layout() === 'grid' || layout() === 'split') && mapSplitSize() !== 'full') {
+      <div class="browse__grid" #splitListEl>
+        @for (listing of listings; track listing.id) {
+          <app-property-card
+            #splitCard
+            [attr.data-listing-id]="listing.id"
+            [listing]="listing"
+            (mapHover)="onMapHover($event)"
+            (mapFocus)="onMapFocus($event)"
+          />
+        }
+      </div>
+    }
+
+    @if (layout() === 'map' || layout() === 'split') {
+      <div class="browse__map">
+        @if (layout() === 'split') {
+          <div class="map__resize">
+            <button
+              type="button"
+              class="map__resize-btn"
+              aria-label="Expand map, narrow listings"
+              title="Expand map"
+              [disabled]="mapSplitSize() === 'full'"
+              (click)="expandMap()"
+            >
+              <app-icon name="chevron-left" />
+            </button>
+            <button
+              type="button"
+              class="map__resize-btn"
+              aria-label="Shrink map, widen listings"
+              title="Shrink map"
+              [disabled]="mapSplitSize() === 'default'"
+              (click)="shrinkMap()"
+            >
+              <app-icon name="chevron-right" />
+            </button>
+          </div>
+        }
+
+        <div class="map__toolbar">
+          @for (tool of mapTools; track tool) {
+            <button
+              type="button"
+              class="pill map__tool"
+              [class.pill--active]="isMapToolActive(tool)"
+              (click)="toggleMapTool(tool)"
+            >
+              {{ tool }}
+            </button>
+          }
+        </div>
+
+        <app-property-map [listings]="listings" />
+      </div>
+    }
+
+    @if (layout() === 'table') {
+      <table class="browse__table">
+        <thead>
+          <tr>
+            <th>Price</th>
+            <th>Beds</th>
+            <th>Baths</th>
+            <th>Sqft</th>
+            <th>Address</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (listing of listings; track listing.id) {
+            <tr>
+              <td>{{ formatPrice(listing.price) }}</td>
+              <td>{{ listing.beds }}</td>
+              <td>{{ listing.baths }}</td>
+              <td>{{ listing.sqft.toLocaleString() }}</td>
+              <td>{{ listing.address }}, {{ listing.cityStateZip }}</td>
+              <td>{{ listing.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<app-filter-sheet
+  [open]="filterSheetOpen()"
+  [sort]="sort()"
+  (closed)="closeFilterSheet()"
+  (sortChange)="selectSort($event)"
+/>

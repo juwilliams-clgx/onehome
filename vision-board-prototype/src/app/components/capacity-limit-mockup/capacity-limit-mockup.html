@@ -1,0 +1,16 @@
+<div class="mockup">
+  @if (bannerList(); as list) {
+    <app-capacity-warning-banner [listName]="list" (manage)="manageList()" />
+  }
+
+  <h2 class="mockup__grid-heading">{{ listings.length }} Results</h2>
+  <div class="mockup__grid">
+    @for (listing of listings; track listing.id) {
+      <app-property-card [listing]="listing" />
+    }
+  </div>
+</div>
+
+@if (activeList(); as list) {
+  <app-capacity-limit-modal [listName]="list" (closed)="activeList.set(null)" (manage)="manageList()" />
+}

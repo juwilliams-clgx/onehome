@@ -1,0 +1,19 @@
+@if (visionBoard.unpinTarget(); as target) {
+  <div class="overlay" (click)="visionBoard.cancelUnpin()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <button type="button" class="dialog__close" aria-label="Close" (click)="visionBoard.cancelUnpin()">
+        <app-icon name="close" color="#52606d" />
+      </button>
+      <h2 class="dialog__title">Are you sure you want to unpin this photo from your Vision Board?</h2>
+      <div class="dialog__actions">
+        <button type="button" class="btn btn--secondary" (click)="visionBoard.cancelUnpin()">
+          Continue Browsing
+        </button>
+        <button type="button" class="btn btn--primary" (click)="visionBoard.confirmUnpin()">
+          Yes, Unpin Photo
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

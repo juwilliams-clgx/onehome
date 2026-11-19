@@ -1,0 +1,19 @@
+<div class="photo-grid">
+  @for (photo of photos; track photo.id) {
+    <div class="photo-grid__tile" (click)="photoSelected.emit(photo)">
+      <img [src]="photo.url" [alt]="photo.room" />
+      <div class="photo-grid__actions">
+        <button type="button" class="chip" (click)="searchSimilar(photo, $event)">
+          <app-icon name="camera" /> Search Similar Look
+        </button>
+        <button type="button" class="chip" (click)="togglePin(photo, $event)">
+          @if (visionBoard.isPinned(photo)) {
+            <app-icon name="unpin" /> Unpin
+          } @else {
+            <app-icon name="pin" /> Pin
+          }
+        </button>
+      </div>
+    </div>
+  }
+</div>

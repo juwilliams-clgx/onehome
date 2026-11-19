@@ -1,0 +1,100 @@
+<div class="uat">
+  <div class="uat__strip"></div>
+
+  <header class="uat__nav">
+    <button type="button" class="uat__hamburger" aria-label="Open Menu">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <g fill="none" fill-rule="evenodd">
+          <g stroke="#323232" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </g>
+        </g>
+      </svg>
+    </button>
+    <img
+      class="uat__logo"
+      alt="OneHome"
+      src="https://media-cdn-v2-uat.corelogic.com/728d878aa7bf49f76aa8/UkNTTH5-GK-8fxcSRlOxmolubU7r6Q_1792_512_1791888770.png?Expires=1825852128&KeyName=media-uat-v2-cdn-url-sign-key&Signature=FwLVBaxp2n-WVQogr7bI1yZaBiA"
+    />
+    <div class="uat__nav-right">
+      <a class="uat__help">Help</a>
+      <button type="button" class="uat__signin">Sign In</button>
+    </div>
+  </header>
+
+  <div class="uat__searchbar">
+    <div class="uat__saved-search">
+      <app-icon name="layout-map" color="#137a8f" />
+      AE Canopy UAT - mixed listings
+    </div>
+    <div class="uat__compare">
+      <app-icon name="layout-split" color="#4577b6" />
+      Compare (0/3)
+    </div>
+    <button type="button" class="uat__new-search" disabled title="Not part of this prototype">New Search</button>
+  </div>
+
+  <div class="uat__results">
+    <h2>{{ listings.length }} Results</h2>
+    <div class="uat__sort">
+      <span>Sort By: <strong class="uat__sort-link">Newest ⌄</strong></span>
+      <span class="uat__sort-link">Search Criteria</span>
+    </div>
+
+    <div class="uat__grid">
+      @for (listing of listings; track listing.id) {
+        <div class="uat__card">
+          <div class="uat__card-media">
+            <img [src]="listing.images[0]" [alt]="listing.address" />
+          </div>
+          <div class="uat__card-body">
+            <div class="uat__card-status-row">
+              <span class="uat__status"><span class="uat__status-dot"></span>{{ listing.status }}</span>
+              <div class="uat__card-actions">
+                <button type="button" class="uat__icon-btn" aria-label="Dislike" (click)="onDislike(listing, $event)">
+                  <svg viewBox="0 0 24 24" width="24" height="24" class="uat__dislike-icon">
+                    <g transform="translate(2 5)">
+                      <path
+                        d="M15.193.215l.323.007c.536.026 1.06.117 1.558.275.356.112.625.23.832.402.504.318.864.956.864 1.655l-.01.203-.024.152.053.064c.28.374.44.833.44 1.318l-.009.197c-.012.13-.035.259-.07.384l-.024.076.096.144c.178.29.289.622.317.97l.007.176-.008.178c-.014.176-.05.348-.104.513l-.013.033.018.026c.21.34.326.736.326 1.15 0 1.201-.963 2.103-2.185 2.221l-1.687.17-1.862.104.434 1.512.055.296c.081.484.108.924.084 1.357-.067 1.246-.617 2.002-1.893 2.002-.896 0-1.34-.48-1.637-1.354l-.055-.156c-.17-.468-.376-.923-.727-1.628l-.07-.139-1.578-1.664-.153-.15c-.208-.19-.43-.334-.659-.428l-.149-.07C7.01 9.862 6.667 9.137 6.667 8.3V2.337l.006-.152C6.753 1.08 7.689.215 8.824.215h6.37zm0 1.6H8.824l-.091.006c-.267.042-.466.26-.466.516v5.962l.005.122c.019.227.09.348.167.38.508.208.966.536 1.365.957l1.741 1.834.304.609c.344.702.552 1.182.739 1.728.08.233.081.267.1.271l.13-.001c.12-.007.154-.04.171-.22l.018-.268c.02-.378-.012-.775-.095-1.188l-.97-3.376 3.825-.212 1.659-.168c.452-.044.739-.313.739-.629 0-.177-.078-.342-.217-.461l-.563-.485.442-.597.051-.082c.03-.056.05-.116.06-.179l.008-.096-.008-.095c-.025-.156-.113-.297-.247-.397l-.631-.468.457-.64.048-.079c.042-.083.064-.173.064-.268 0-.198-.099-.382-.268-.5l-.583-.411.341-.627.028-.063c.015-.044.023-.09.023-.136 0-.147-.076-.282-.207-.366-.079-.058-.2-.111-.37-.165-.44-.139-.911-.208-1.4-.208zM4.312.215L4.46.22c.979.075 1.756.88 1.756 1.87v6.455l-.006.147c-.076.971-.9 1.729-1.898 1.729H2.104l-.148-.006C.977 10.341.2 9.536.2 8.545V2.09l.006-.147C.282.972 1.106.215 2.104.215h2.208zm0 1.6H2.104l-.071.007c-.136.03-.233.142-.233.268v6.455l.008.062c.03.12.148.214.296.214h2.208l.071-.008c.136-.029.233-.141.233-.268V2.09l-.008-.061c-.03-.12-.148-.214-.296-.214z"
+                      />
+                    </g>
+                  </svg>
+                </button>
+                <button type="button" class="uat__icon-btn" aria-label="Favorite" (click)="onFavorite(listing, $event)">
+                  <svg viewBox="0 0 24 24" width="24" height="24" class="uat__heart-icon">
+                    <g transform="translate(4 4)">
+                      <path
+                        d="M12.005.106C10.63.17 9.528.796 8.592 2.003l-.092.121-.117-.156C7.417.724 6.24.1 4.75.1 2.178.1.1 2.285.1 4.943c0 2.796 1.294 5.306 3.483 7.508 1.433 1.443 3.046 2.563 4.49 3.341l.457.246.442-.272c1.433-.882 3.032-2.092 4.455-3.57C15.61 9.933 16.9 7.503 16.9 4.944 16.9 2.285 14.822.1 12.25.1l-.245.006zM12.25 1.9c1.557 0 2.85 1.36 2.85 3.043 0 2.01-1.08 4.044-2.97 6.005l-.359.363c-.969.953-2.018 1.78-3.01 2.45l-.29.191-.27-.159c-1.106-.668-2.285-1.547-3.342-2.61C2.978 9.287 1.9 7.198 1.9 4.942 1.9 3.26 3.193 1.9 4.75 1.9c1.013 0 1.744.443 2.486 1.554L8.5 5.102l1.23-1.6c.776-1.159 1.507-1.602 2.52-1.602z"
+                      />
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="uat__price">{{ formatPrice(listing.price) }}</div>
+            <div class="uat__type">{{ propertyType() }}</div>
+            <div class="uat__address">{{ listing.address }}<br />{{ listing.cityStateZip }}</div>
+            <div class="uat__stats">
+              {{ listing.beds }}bd &middot; {{ listing.baths }}ba
+              @if (listing.sqft) {
+                &middot; {{ listing.sqft.toLocaleString() }} sqft
+              }
+            </div>
+            <div class="uat__mls">MLS #{{ listing.mlsNumber }}</div>
+            <div class="uat__compare-row">
+              <span class="uat__compare-link">Compare</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <button type="button" class="uat__map-fab" disabled title="Not part of this prototype">
+    <app-icon name="layout-map" color="#fff" /> Map
+  </button>
+</div>
+
+@if (activeCapacityList(); as list) {
+  <app-capacity-limit-modal [listName]="list" (closed)="closeCapacityModal()" (manage)="closeCapacityModal()" />
+}

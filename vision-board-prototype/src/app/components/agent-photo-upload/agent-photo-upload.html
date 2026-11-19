@@ -1,0 +1,114 @@
+<div class="apu">
+  <header class="apu__header">
+    <a class="apu__back" routerLink="/agent/listings">
+      <app-icon name="chevron-left" />
+      Listings
+    </a>
+    <div class="apu__header-title">
+      <span class="apu__eyebrow">Agent Tools &middot; Photos</span>
+      @if (listing(); as l) {
+        <h1>{{ l.address }}</h1>
+        <p class="apu__subaddress">{{ l.cityStateZip }}</p>
+      } @else {
+        <h1>Listing not found</h1>
+      }
+      <p class="apu__intro">
+        Every photo is automatically cropped to a 4:3 ratio for a consistent look across your listing. Tap any photo
+        to manually fine-tune the crop until it fits perfectly.
+      </p>
+    </div>
+  </header>
+
+  @if (listing(); as l) {
+    <div class="apu__status" [class.apu__status--clear]="needsReviewCount() === 0 && photos().length > 0">
+      @if (photos().length === 0) {
+        <span>Add photos to get started.</span>
+      } @else if (needsReviewCount() > 0) {
+        <app-icon name="crop" color="#8a5a00" />
+        <span
+          >{{ needsReviewCount() }} photo{{ needsReviewCount() === 1 ? '' : 's' }} auto-cropped to 4:3 &mdash; tap to
+          fine-tune.</span
+        >
+      } @else {
+        <app-icon name="check" color="#137a8f" />
+        <span>All {{ photos().length }} photos are ready at 4:3.</span>
+      }
+    </div>
+
+    <div
+      class="apu__dropzone"
+      [class.apu__dropzone--active]="dragActive()"
+      [class.apu__dropzone--compact]="photos().length > 0"
+      (drop)="onDrop($event)"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave()"
+    >
+      <app-icon name="upload" />
+      <div class="apu__dropzone-copy">
+        <strong>{{ photos().length > 0 ? 'Add more photos' : 'Drag photos here' }}</strong>
+        <span>or choose files from your phone or computer &middot; JPG or PNG</span>
+      </div>
+      <label class="apu__choose-btn">
+        Choose Photos
+        <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" hidden />
+      </label>
+    </div>
+
+    <div class="apu__grid">
+      @for (photo of photos(); track photo.id; let i = $index) {
+        <div class="apu__tile" (click)="openCropper(i)">
+          <div class="apu__tile-frame">
+            <img [src]="photo.preview" alt="" />
+            @if (photo.needsReview && !photo.reviewed) {
+              <span class="apu__badge apu__badge--warn">
+                <app-icon name="crop" color="#fff" />
+                Tap to adjust
+              </span>
+            } @else {
+              <span class="apu__badge apu__badge--ok">
+                <app-icon name="check" color="#fff" />
+                Ready
+              </span>
+            }
+            <button class="apu__star" [class.apu__star--active]="photo.isCover" (click)="setCover(i, $event)" aria-label="Set as cover photo">
+              <app-icon [name]="photo.isCover ? 'star-filled' : 'star'" [color]="photo.isCover ? '#f5c518' : '#fff'" />
+            </button>
+            <button class="apu__remove" (click)="removePhoto(i, $event)" aria-label="Remove photo">
+              <app-icon name="close" color="#fff" />
+            </button>
+          </div>
+          @if (photo.isCover) {
+            <span class="apu__cover-label">Cover photo</span>
+          }
+        </div>
+      }
+      @for (n of loadingPlaceholders(); track $index) {
+        <div class="apu__tile apu__tile--loading">
+          <div class="apu__tile-frame apu__tile-frame--skeleton"></div>
+        </div>
+      }
+    </div>
+
+    <footer class="apu__footer">
+      <span class="apu__footer-count">{{ photos().length }} photo{{ photos().length === 1 ? '' : 's' }}</span>
+      <button class="apu__save-btn" [disabled]="photos().length === 0 || saving()" (click)="save()">
+        {{ saving() ? 'Saving…' : 'Save Photos' }}
+      </button>
+    </footer>
+  }
+
+  @if (activePhoto(); as photo) {
+    <app-photo-cropper
+      [imageUrl]="photo.originalUrl"
+      [initialState]="photo.state"
+      [stepLabel]="stepLabel()"
+      [canPrev]="canGoPrev()"
+      [canNext]="canGoNext()"
+      title="Crop for listing"
+      (apply)="onCropApply($event)"
+      (cancelled)="closeCropper()"
+      (prevPhoto)="goPrevPhoto()"
+      (nextPhoto)="goNextPhoto()"
+    />
+  }
+</div>

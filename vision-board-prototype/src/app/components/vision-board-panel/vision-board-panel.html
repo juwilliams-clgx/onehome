@@ -1,0 +1,38 @@
+<div class="panel">
+  <div class="panel__header">
+    <h2 class="panel__title">
+      Vision Board
+      <span class="badge--ai"><app-icon name="sparkle" /> Powered by AI</span>
+      <app-icon name="info" class="info-icon" title="We do not store or share any images you upload." />
+    </h2>
+  </div>
+
+  @if (visionBoard.isFull()) {
+    <p class="panel__body">Max photos pinned &ndash; unpin any photo to pin more.</p>
+  } @else {
+    <p class="panel__body">
+      Manage your Vision Board here, upload more inspiration, continue browsing to pin photos from other
+      properties, and launch a Vision Board search to find homes that match your aesthetic.
+    </p>
+  }
+
+  <app-vision-board-grid />
+
+  <p class="panel__hint">
+    Maximum 3 images<br />
+    (600 px minimum recommended)<br />
+    For best results, try uploading different kinds of images.
+  </p>
+</div>
+
+<div class="panel__footer">
+  <div class="panel__footer-inner">
+    <button
+      type="button"
+      class="btn btn--primary panel__launch"
+      [disabled]="visionBoard.pinnedPhotos().length === 0"
+    >
+      Launch Vision Board Search
+    </button>
+  </div>
+</div>

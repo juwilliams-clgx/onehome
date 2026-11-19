@@ -1,0 +1,18 @@
+# This file covers things at the repo root only; each app folder has its own
+# more specific .gitignore (vision-board-prototype/.gitignore for the Angular
+# web app, vision-board-ios/.gitignore for the Xcode/Swift native app).
+
+.DS_Store
+Thumbs.db
+
+# Local session/tooling artifacts some editors or agents create at the root.
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local Copilot/agent tooling config (custom subagents, hooks, the Impeccable
+# skill and its ~19MB macOS-only compiled binary) - not part of the product,
+# and not portable across contributors' machines/OSes.
+.github/

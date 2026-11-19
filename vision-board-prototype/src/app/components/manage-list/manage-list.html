@@ -1,0 +1,252 @@
+<div class="mp">
+  <header class="mp__nav">
+    <div class="mp__logo">one<span>home</span></div>
+    <nav class="mp__nav-links">
+      <span class="mp__nav-link">Buy / Rent</span>
+      <span class="mp__nav-link mp__nav-link--active">My Properties</span>
+      <span class="mp__nav-link">Planner</span>
+    </nav>
+    <div class="mp__nav-right">
+      <a class="mp__help">Help</a>
+      <button type="button" class="mp__bell" aria-label="Notifications" disabled title="Not part of this prototype">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="1.5">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+          />
+        </svg>
+        <span class="mp__bell-badge">2</span>
+      </button>
+      <div class="mp__avatar">MZ</div>
+    </div>
+  </header>
+
+  <div class="mp__tabs">
+    @for (tab of tabs(); track tab.key) {
+      <button type="button" class="mp__tab" [class.mp__tab--active]="isActiveTab(tab)" (click)="selectTab(tab)">
+        @switch (tab.key) {
+          @case ('favorites') {
+            <app-icon name="heart-filled" [color]="isActiveTab(tab) ? '#e0304f' : '#aaa'" />
+          }
+          @case ('agent-picks') {
+            <app-icon name="sparkle" [color]="isActiveTab(tab) ? '#c9971f' : '#aaa'" />
+          }
+          @case ('dislikes') {
+            <svg viewBox="0 0 24 24" width="18" height="18" [style.fill]="isActiveTab(tab) ? '#4577b6' : '#aaa'">
+              <g transform="translate(2 5)">
+                <path
+                  d="M15.193.215l.323.007c.536.026 1.06.117 1.558.275.356.112.625.23.832.402.504.318.864.956.864 1.655l-.01.203-.024.152.053.064c.28.374.44.833.44 1.318l-.009.197c-.012.13-.035.259-.07.384l-.024.076.096.144c.178.29.289.622.317.97l.007.176-.008.178c-.014.176-.05.348-.104.513l-.013.033.018.026c.21.34.326.736.326 1.15 0 1.201-.963 2.103-2.185 2.221l-1.687.17-1.862.104.434 1.512.055.296c.081.484.108.924.084 1.357-.067 1.246-.617 2.002-1.893 2.002-.896 0-1.34-.48-1.637-1.354l-.055-.156c-.17-.468-.376-.923-.727-1.628l-.07-.139-1.578-1.664-.153-.15c-.208-.19-.43-.334-.659-.428l-.149-.07C7.01 9.862 6.667 9.137 6.667 8.3V2.337l.006-.152C6.753 1.08 7.689.215 8.824.215h6.37z M4.312.215L4.46.22c.979.075 1.756.88 1.756 1.87v6.455l-.006.147c-.076.971-.9 1.729-1.898 1.729H2.104l-.148-.006C.977 10.341.2 9.536.2 8.545V2.09l.006-.147C.282.972 1.106.215 2.104.215h2.208z"
+                />
+              </g>
+            </svg>
+          }
+          @case ('agent-discards') {
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              [attr.stroke]="isActiveTab(tab) ? '#c0392b' : '#aaa'"
+              fill="none"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M5.5 5.5l13 13" />
+            </svg>
+          }
+        }
+        {{ tab.label }} ({{ tab.count }})
+      </button>
+    }
+
+    <div class="mp__tabs-right">
+      <span class="mp__show-map">Show Map</span>
+      <button type="button" class="mp__layout-toggle" disabled title="Not part of this prototype">
+        <app-icon name="layout-split" color="#536471" />
+      </button>
+    </div>
+  </div>
+
+  <div class="mp__results">
+    @if (!isUnderLimit()) {
+      <app-capacity-warning-banner [listName]="listName" />
+    }
+
+    <div class="mp__heading-row">
+      <h1>{{ listName }} ({{ count() }})<app-icon name="info" color="#137a8f" class="mp__info-icon" /></h1>
+    </div>
+
+    <div class="mp__filters">
+      <div class="mp__filter-dropdown">
+        <button
+          type="button"
+          class="mp__filters-btn"
+          [class.mp__filters-btn--active]="activeFilterCount() > 0"
+          (click)="toggleFilterPanel()"
+        >
+          <app-icon name="sliders" color="#536471" /> Filters ({{ activeFilterCount() }})
+        </button>
+        @if (filterPanelOpen()) {
+          <div class="mp__filter-scrim" (click)="closeFilterPanel()"></div>
+          <div class="mp__filter-panel" (click)="$event.stopPropagation()">
+            <p class="mp__filter-panel-title">Status</p>
+            @for (status of statusOptions; track status) {
+              <label class="mp__filter-option">
+                <input
+                  type="checkbox"
+                  [checked]="isStatusFilterActive(status)"
+                  (change)="toggleStatusFilter(status)"
+                />
+                <span>{{ status }}</span>
+              </label>
+            }
+            @if (activeFilterCount() > 0) {
+              <button type="button" class="mp__filter-clear" (click)="clearStatusFilter()">Clear filters</button>
+            }
+          </div>
+        }
+      </div>
+      @if (!selectionMode()) {
+        <button type="button" class="mp__select-link" (click)="toggleSelectionMode()" [disabled]="filteredItems().length === 0">
+          Select
+        </button>
+      }
+      <span class="mp__sort">Sort By: <strong class="mp__sort-link">Date Added ⌄</strong></span>
+    </div>
+
+    @if (selectionMode()) {
+      <div class="mp__bulk-bar">
+        <label class="mp__bulk-check">
+          <input type="checkbox" [checked]="allSelected()" (change)="toggleSelectAll()" />
+          <span>{{ allSelected() ? 'Deselect All' : 'Select All' }}</span>
+        </label>
+        <span class="mp__bulk-count">{{ selectedCount() }} selected</span>
+        <div class="mp__bulk-actions">
+          <button type="button" class="mp__bulk-remove" [disabled]="selectedCount() === 0" (click)="requestBulkRemove()">
+            Remove Selected
+          </button>
+          <button type="button" class="mp__bulk-cancel" (click)="toggleSelectionMode()">Cancel</button>
+        </div>
+      </div>
+    }
+
+    @if (count() === 0) {
+      <p class="mp__empty">Nothing left on {{ listName }}.</p>
+    } @else if (filteredItems().length === 0) {
+      <p class="mp__empty">
+        No {{ listName.toLowerCase() }} match the selected filters.
+        <a class="mp__filter-clear-link" (click)="clearStatusFilter()">Clear filters</a>
+      </p>
+    } @else {
+      <div class="mp__grid">
+        @for (listing of filteredItems(); track listing.id) {
+          <div
+            class="mp__card"
+            [class.mp__card--selectable]="selectionMode()"
+            [class.mp__card--selected]="isSelected(listing)"
+            (click)="selectionMode() && toggleSelect(listing)"
+          >
+            <div class="mp__card-media">
+              @if (selectionMode()) {
+                <label class="mp__card-checkbox" (click)="$event.stopPropagation()">
+                  <input type="checkbox" [checked]="isSelected(listing)" (change)="toggleSelect(listing)" />
+                </label>
+              }
+              <img [src]="listing.images[0]" [alt]="listing.address" />
+            </div>
+            <div class="mp__card-body">
+              <div class="mp__card-status-row">
+                <span class="mp__status" [class.mp__status--sold]="listing.status === 'Sold'">
+                  <span class="mp__status-dot"></span>{{ statusLabel(listing) }}
+                </span>
+                <div class="mp__card-actions" (click)="$event.stopPropagation()">
+                  @if (listName === 'Dislikes') {
+                    <button
+                      type="button"
+                      class="mp__icon-btn"
+                      [attr.aria-label]="'Remove ' + listing.address + ' from ' + listName"
+                      (click)="remove(listing)"
+                    >
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="#4577b6">
+                        <g transform="translate(2 5)">
+                          <path
+                            d="M15.193.215l.323.007c.536.026 1.06.117 1.558.275.356.112.625.23.832.402.504.318.864.956.864 1.655l-.01.203-.024.152.053.064c.28.374.44.833.44 1.318l-.009.197c-.012.13-.035.259-.07.384l-.024.076.096.144c.178.29.289.622.317.97l.007.176-.008.178c-.014.176-.05.348-.104.513l-.013.033.018.026c.21.34.326.736.326 1.15 0 1.201-.963 2.103-2.185 2.221l-1.687.17-1.862.104.434 1.512.055.296c.081.484.108.924.084 1.357-.067 1.246-.617 2.002-1.893 2.002-.896 0-1.34-.48-1.637-1.354l-.055-.156c-.17-.468-.376-.923-.727-1.628l-.07-.139-1.578-1.664-.153-.15c-.208-.19-.43-.334-.659-.428l-.149-.07C7.01 9.862 6.667 9.137 6.667 8.3V2.337l.006-.152C6.753 1.08 7.689.215 8.824.215h6.37z M4.312.215L4.46.22c.979.075 1.756.88 1.756 1.87v6.455l-.006.147c-.076.971-.9 1.729-1.898 1.729H2.104l-.148-.006C.977 10.341.2 9.536.2 8.545V2.09l.006-.147C.282.972 1.106.215 2.104.215h2.208z"
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                    <button type="button" class="mp__icon-btn" aria-label="Favorite" disabled title="Not part of this prototype">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="#e0304f">
+                        <g transform="translate(4 4)">
+                          <path
+                            d="M12.005.106C10.63.17 9.528.796 8.592 2.003l-.092.121-.117-.156C7.417.724 6.24.1 4.75.1 2.178.1.1 2.285.1 4.943c0 2.796 1.294 5.306 3.483 7.508 1.433 1.443 3.046 2.563 4.49 3.341l.457.246.442-.272c1.433-.882 3.032-2.092 4.455-3.57C15.61 9.933 16.9 7.503 16.9 4.944 16.9 2.285 14.822.1 12.25.1l-.245.006z"
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                  } @else {
+                    <button
+                      type="button"
+                      class="mp__icon-btn"
+                      aria-label="Dislike"
+                      disabled
+                      title="Not part of this prototype"
+                    >
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="#4577b6">
+                        <g transform="translate(2 5)">
+                          <path
+                            d="M15.193.215l.323.007c.536.026 1.06.117 1.558.275.356.112.625.23.832.402.504.318.864.956.864 1.655l-.01.203-.024.152.053.064c.28.374.44.833.44 1.318l-.009.197c-.012.13-.035.259-.07.384l-.024.076.096.144c.178.29.289.622.317.97l.007.176-.008.178c-.014.176-.05.348-.104.513l-.013.033.018.026c.21.34.326.736.326 1.15 0 1.201-.963 2.103-2.185 2.221l-1.687.17-1.862.104.434 1.512.055.296c.081.484.108.924.084 1.357-.067 1.246-.617 2.002-1.893 2.002-.896 0-1.34-.48-1.637-1.354l-.055-.156c-.17-.468-.376-.923-.727-1.628l-.07-.139-1.578-1.664-.153-.15c-.208-.19-.43-.334-.659-.428l-.149-.07C7.01 9.862 6.667 9.137 6.667 8.3V2.337l.006-.152C6.753 1.08 7.689.215 8.824.215h6.37zm0 1.6H8.824l-.091.006c-.267.042-.466.26-.466.516v5.962l.005.122c.019.227.09.348.167.38.508.208.966.536 1.365.957l1.741 1.834.304.609c.344.702.552 1.182.739 1.728.08.233.081.267.1.271l.13-.001c.12-.007.154-.04.171-.22l.018-.268c.02-.378-.012-.775-.095-1.188l-.97-3.376 3.825-.212 1.659-.168c.452-.044.739-.313.739-.629 0-.177-.078-.342-.217-.461l-.563-.485.442-.597.051-.082c.03-.056.05-.116.06-.179l.008-.096-.008-.095c-.025-.156-.113-.297-.247-.397l-.631-.468.457-.64.048-.079c.042-.083.064-.173.064-.268 0-.198-.099-.382-.268-.5l-.583-.411.341-.627.028-.063c.015-.044.023-.09.023-.136 0-.147-.076-.282-.207-.366-.079-.058-.2-.111-.37-.165-.44-.139-.911-.208-1.4-.208zM4.312.215L4.46.22c.979.075 1.756.88 1.756 1.87v6.455l-.006.147c-.076.971-.9 1.729-1.898 1.729H2.104l-.148-.006C.977 10.341.2 9.536.2 8.545V2.09l.006-.147C.282.972 1.106.215 2.104.215h2.208zm0 1.6H2.104l-.071.007c-.136.03-.233.142-.233.268v6.455l.008.062c.03.12.148.214.296.214h2.208l.071-.008c.136-.029.233-.141.233-.268V2.09l-.008-.061c-.03-.12-.148-.214-.296-.214z"
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="mp__icon-btn"
+                      [attr.aria-label]="'Remove ' + listing.address + ' from ' + listName"
+                      (click)="remove(listing)"
+                    >
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="#e0304f">
+                        <g transform="translate(4 4)">
+                          <path
+                            d="M12.005.106C10.63.17 9.528.796 8.592 2.003l-.092.121-.117-.156C7.417.724 6.24.1 4.75.1 2.178.1.1 2.285.1 4.943c0 2.796 1.294 5.306 3.483 7.508 1.433 1.443 3.046 2.563 4.49 3.341l.457.246.442-.272c1.433-.882 3.032-2.092 4.455-3.57C15.61 9.933 16.9 7.503 16.9 4.944 16.9 2.285 14.822.1 12.25.1l-.245.006z"
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                  }
+                </div>
+              </div>
+              <div class="mp__price">{{ formatPrice(listing.price) }}</div>
+              @if (listing.status === 'Sold') {
+                <div class="mp__listed-for">Listed For: {{ formatPrice(listing.price) }}</div>
+              }
+              <div class="mp__type">Condominium</div>
+              <div class="mp__address">{{ listing.address }}<br />{{ listing.cityStateZip }}</div>
+              <div class="mp__stats">
+                {{ listing.beds }}bd &middot; {{ listing.baths }}ba &middot; {{ listing.sqft.toLocaleString() }} sqft
+              </div>
+              <div class="mp__mls">MLS #{{ listing.mlsNumber }}</div>
+              <div class="mp__compare-row">
+                <span class="mp__compare-link">Compare</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (confirmBulkRemoveOpen()) {
+  <div class="mp__bulk-confirm-overlay" (click)="cancelBulkRemove()">
+    <div class="mp__bulk-confirm-dialog" (click)="$event.stopPropagation()">
+      <h2>Remove {{ selectedCount() }} {{ selectedCount() === 1 ? 'property' : 'properties' }}?</h2>
+      <p>This will remove {{ selectedCount() === 1 ? 'it' : 'them' }} from {{ listName }}. This can't be undone.</p>
+      <div class="mp__bulk-confirm-dialog__actions">
+        <button type="button" class="mp__bulk-confirm-dialog__cancel" (click)="cancelBulkRemove()">Cancel</button>
+        <button type="button" class="mp__bulk-confirm-dialog__confirm" (click)="confirmBulkRemove()">Remove</button>
+      </div>
+    </div>
+  </div>
+}

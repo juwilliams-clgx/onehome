@@ -1,0 +1,705 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+.mp {
+  font-family: 'Montserrat', sans-serif;
+  background: #f5f6f7;
+  min-height: 100vh;
+  color: #323232;
+}
+
+.mp__nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: #0f6e7d;
+  color: #fff;
+  padding: 14px 24px;
+}
+
+.mp__logo {
+  font-weight: 700;
+  font-size: 18px;
+
+  span {
+    color: #ff6b6b;
+  }
+}
+
+.mp__nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.mp__nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mp__nav-link--active {
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+}
+
+.mp__nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.mp__help {
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mp__bell {
+  position: relative;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  app-icon {
+    font-size: 20px;
+  }
+}
+
+.mp__bell-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #e0304f;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 999px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mp__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #3f5b8f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mp__tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 0 24px;
+}
+
+.mp__tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #aaa;
+  cursor: pointer;
+
+  app-icon {
+    font-size: 16px;
+  }
+}
+
+.mp__tab--active {
+  color: #137a8f;
+  border-bottom-color: #137a8f;
+}
+
+.mp__tabs-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mp__show-map {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323232;
+  cursor: pointer;
+}
+
+.mp__layout-toggle {
+  background: none;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mp__results {
+  padding: 20px 24px 120px;
+}
+
+.mp__heading-row h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.mp__info-icon {
+  font-size: 15px;
+}
+
+.mp__filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.mp__filter-dropdown {
+  position: relative;
+}
+
+.mp__filters-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #536471;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #c4c4c4;
+  }
+}
+
+.mp__filters-btn--active {
+  border-color: #137a8f;
+  color: #137a8f;
+}
+
+.mp__filter-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.mp__filter-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 11;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 14px;
+  min-width: 180px;
+}
+
+.mp__filter-panel-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a98a6;
+}
+
+.mp__filter-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 14px;
+  color: #323232;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: #137a8f;
+    cursor: pointer;
+  }
+}
+
+.mp__filter-clear {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #137a8f;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mp__filter-clear-link {
+  color: #137a8f;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mp__sort {
+  font-size: 13px;
+  color: #323232;
+}
+
+.mp__sort-link {
+  color: #137a8f;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mp__select-link {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #137a8f;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+/* Bulk-action bar: same visual language as the page (Montserrat, card
+   border/radius), appears in place of nothing extra - it replaces the need
+   to open each card individually to clear a list one at a time. */
+.mp__bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: -8px 0 20px;
+}
+
+.mp__bulk-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #323232;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: #137a8f;
+    cursor: pointer;
+  }
+}
+
+.mp__bulk-count {
+  font-size: 13px;
+  color: #536471;
+}
+
+.mp__bulk-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mp__bulk-remove {
+  background: #e0304f;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+
+  &:disabled {
+    background: #e8a8b3;
+    cursor: not-allowed;
+  }
+}
+
+.mp__bulk-cancel {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #536471;
+  cursor: pointer;
+}
+
+.mp__empty {
+  font-size: 14px;
+  color: #536471;
+}
+
+.mp__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px 20px;
+}
+
+.mp__card {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mp__card--selectable {
+  cursor: pointer;
+}
+
+.mp__card--selected {
+  border-color: #137a8f;
+  box-shadow: 0 0 0 2px #137a8f, 0 8px 14px rgba(0, 0, 0, 0.06);
+}
+
+.mp__card-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #f5f5f5;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.mp__card-body {
+  padding: 12px 14px;
+}
+
+.mp__card-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.mp__status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #757575;
+}
+
+.mp__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #757575;
+}
+
+.mp__status--sold {
+  color: #c0392b;
+
+  .mp__status-dot {
+    background: #c0392b;
+  }
+}
+
+.mp__card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mp__icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin: -6px;
+  display: flex;
+  align-items: center;
+  border-radius: 100%;
+  transition: background-color 0.15s ease;
+}
+
+.mp__icon-btn:hover {
+  background-color: #f2f2f2;
+}
+
+.mp__price {
+  font-size: 18px;
+  font-weight: 500;
+  color: #323232;
+  margin-bottom: 2px;
+}
+
+.mp__listed-for {
+  font-size: 12px;
+  font-weight: 700;
+  color: #323232;
+  margin-bottom: 4px;
+}
+
+.mp__type {
+  font-size: 12px;
+  color: #757575;
+  margin-bottom: 8px;
+}
+
+.mp__address {
+  font-size: 12px;
+  font-weight: 500;
+  color: #323232;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.mp__stats {
+  font-size: 12px;
+  color: #323232;
+  margin-bottom: 8px;
+}
+
+.mp__mls {
+  font-size: 10px;
+  font-weight: 500;
+  color: #757575;
+  margin-bottom: 10px;
+}
+
+.mp__compare-row {
+  text-align: right;
+}
+
+.mp__compare-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #137a8f;
+  cursor: pointer;
+}
+
+.mp__compare-link:hover {
+  text-decoration: underline;
+}
+
+.mp__card-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: #137a8f;
+    cursor: pointer;
+  }
+}
+
+.mp__bulk-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.mp__bulk-confirm-dialog {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 380px;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #323232;
+  }
+
+  p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: #536471;
+    line-height: 1.5;
+  }
+}
+
+.mp__bulk-confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.mp__bulk-confirm-dialog__cancel {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #323232;
+  cursor: pointer;
+}
+
+.mp__bulk-confirm-dialog__confirm {
+  background: #e0304f;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+  .mp__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .mp__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .mp__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mp__bulk-bar {
+    flex-wrap: wrap;
+  }
+
+  .mp__bulk-actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/*
+ * This page was built as a pixel-accurate desktop replica and never got
+ * mobile rules for its own header/tabs row, so both overflowed the viewport
+ * width (confirmed: .mp__nav and .mp__tabs were ~550-650px wide in a 390px
+ * viewport). That horizontal overflow is what pushed the bulk-remove
+ * confirmation dialog off-screen - mobile browsers can visually displace
+ * `position: fixed` elements once the page itself scrolls horizontally.
+ * Fix: contain the overflow to local scrollable strips (same pattern used
+ * elsewhere in this app for an overflowing nav row) instead of letting it
+ * reach the document, plus a defensive overflow guard on the page itself.
+ */
+@media (max-width: 640px) {
+  .mp {
+    overflow-x: hidden;
+  }
+
+  .mp__nav {
+    gap: 16px;
+    padding: 12px 16px;
+  }
+
+  .mp__nav-links {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mp__nav-right {
+    flex-shrink: 0;
+    gap: 14px;
+  }
+
+  .mp__tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 16px;
+  }
+
+  .mp__tab {
+    flex-shrink: 0;
+  }
+
+  .mp__tabs-right {
+    flex-shrink: 0;
+  }
+
+  .mp__results {
+    padding: 16px 16px 120px;
+  }
+}

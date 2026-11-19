@@ -1,0 +1,253 @@
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  position: relative;
+}
+
+.search-header__compare {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #cbd2d9;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  /* "Condenses" away when the search field expands, matching the request to
+     shrink the other controls rather than overlap them. */
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, margin 0.28s ease, padding 0.28s ease;
+}
+
+.search-header--expanded .search-header__compare {
+  width: 0;
+  min-width: 0;
+  border-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.search-header__badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ff6b6b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-header__pill {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f5f7;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+
+  span {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.search-header__chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.search-header__chevron--open {
+  transform: rotate(180deg);
+}
+
+.search-header__search-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #cbd2d9;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* The expanded field replaces the pill + search button entirely (an @if/@else
+   swap), so its own entrance is a deliberate slide+fade from the right -
+   reads as "opening into" the space the condensed compare icon just vacated. */
+.search-header__field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f5f7;
+  border-radius: 999px;
+  padding: 8px 10px 8px 14px;
+  animation: search-field-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: none;
+    font-size: 15px;
+    outline: none;
+    color: #000;
+  }
+}
+
+@keyframes search-field-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px) scaleX(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+  }
+}
+
+.search-header__chip {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.search-header__chip--camera {
+  border-color: #f4c9a6;
+}
+
+.search-header__chip--ai {
+  border-color: #ddd6fe;
+}
+
+.search-header__close {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: #52606d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.search-header__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 29;
+  background: transparent;
+}
+
+.search-header__dropdown {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 100%;
+  z-index: 30;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  padding: 12px 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  animation: search-dropdown-in 0.16s ease;
+}
+
+@keyframes search-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-header__dropdown-section {
+  padding: 6px 16px;
+
+  & + & {
+    border-top: 1px solid #e4e7eb;
+    margin-top: 6px;
+    padding-top: 12px;
+  }
+
+  h4 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #52606d;
+  }
+}
+
+.search-header__dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #000;
+  cursor: pointer;
+}
+
+.search-header__dropdown-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .search-header__dropdown-item {
+    flex: 1;
+  }
+}
+
+.search-header__dropdown-remove {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: #52606d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

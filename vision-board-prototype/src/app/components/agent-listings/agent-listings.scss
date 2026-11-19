@@ -1,0 +1,97 @@
+.al {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #000;
+}
+
+.al__header {
+  margin-bottom: 22px;
+}
+
+.al__eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #137a8f;
+  margin-bottom: 6px;
+}
+
+.al__header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.al__subtitle {
+  margin: 4px 0 0;
+  color: #52606d;
+  font-size: 14px;
+}
+
+.al__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.al__card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 31, 0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 31, 0.14);
+  }
+}
+
+.al__thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.al__info {
+  padding: 12px 14px 4px;
+  flex: 1;
+}
+
+.al__address {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.al__citystate {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #52606d;
+}
+
+.al__meta {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #8a98a6;
+}
+
+.al__cta {
+  margin: 10px 14px 14px;
+  align-self: flex-start;
+  background: #137a8f;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 18px;
+}

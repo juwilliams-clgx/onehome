@@ -1,0 +1,134 @@
+.compare__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  h1 {
+    flex: 1;
+    font-size: 20px;
+    margin: 0;
+  }
+}
+
+.compare__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #cbd2d9;
+}
+
+.compare__clear {
+  background: none;
+  border: none;
+  color: #c2410c;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.compare__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 60px 20px;
+  color: #52606d;
+
+  app-icon {
+    font-size: 48px;
+  }
+
+  p {
+    max-width: 320px;
+    margin: 0;
+  }
+}
+
+.compare__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.compare__card {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.compare__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.compare__price {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px 14px 0;
+}
+
+.compare__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 10px 14px;
+
+  div {
+    text-align: center;
+    background: #f4f5f7;
+    border-radius: 6px;
+    padding: 6px 4px;
+  }
+
+  dt {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #52606d;
+    letter-spacing: 0.03em;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+  }
+}
+
+.compare__address {
+  font-size: 13px;
+  color: #000;
+  padding: 0 14px 14px;
+}
+
+@media (max-width: 640px) {
+  .compare__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,21 @@
+<div class="al">
+  <header class="al__header">
+    <span class="al__eyebrow">Agent Tools</span>
+    <h1>Your listings</h1>
+    <p class="al__subtitle">Select a listing to upload and crop photos.</p>
+  </header>
+
+  <div class="al__grid">
+    @for (listing of listings; track listing.id) {
+      <a class="al__card" [routerLink]="['/agent/listings', listing.id, 'photos']">
+        <img class="al__thumb" [src]="listing.images[0]" alt="" />
+        <div class="al__info">
+          <p class="al__address">{{ listing.address }}</p>
+          <p class="al__citystate">{{ listing.cityStateZip }}</p>
+          <p class="al__meta">{{ listing.images.length }} photos on file</p>
+        </div>
+        <span class="al__cta">Upload Photos</span>
+      </a>
+    }
+  </div>
+</div>

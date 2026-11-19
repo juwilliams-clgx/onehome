@@ -1,0 +1,48 @@
+@if (visionBoard.loveThisLookTarget()) {
+  <div class="overlay" (click)="visionBoard.closeLoveThisLook()">
+    <div class="dialog dialog--love-this-look" (click)="$event.stopPropagation()">
+      <button type="button" class="dialog__close" aria-label="Close" (click)="visionBoard.closeLoveThisLook()">
+        <app-icon name="close" color="#52606d" />
+      </button>
+
+      <h2 class="dialog__title love-this-look__title">
+        Love This Look?
+        <span class="badge--ai"><app-icon name="sparkle" /> Powered by AI</span>
+      </h2>
+
+      <div class="love-this-look__options">
+        <div class="love-this-look__option" [style.order]="visionBoard.isFull() ? 3 : 1">
+          <div class="love-this-look__illustration">
+            <img src="/illustration-pin-on-phone.svg" alt="" />
+          </div>
+          @if (visionBoard.isFull()) {
+            <h3>Vision Board Full</h3>
+            <p>You've already pinned 3 photos. Manage your Vision Board to make room for this one.</p>
+            <button type="button" class="btn btn--primary" (click)="visionBoard.managePinsFromLoveThisLook()">
+              Manage Pins
+            </button>
+          } @else {
+            <h3>Pin to Vision Board</h3>
+            <p>Pin your favorite finds as you go&mdash;we'll keep them safe while you browse.</p>
+            <button type="button" class="btn btn--primary" (click)="visionBoard.pinFromLoveThisLook()">
+              Pin to Vision Board
+            </button>
+          }
+        </div>
+
+        <div class="love-this-look__divider" style="order: 2">Or</div>
+
+        <div class="love-this-look__option" [style.order]="visionBoard.isFull() ? 1 : 3">
+          <div class="love-this-look__illustration">
+            <img src="/illustration-house-search.svg" alt="" />
+          </div>
+          <h3>Search Similar Look</h3>
+          <p>Pin this style and instantly find more properties with a matching aesthetic.</p>
+          <button type="button" class="btn btn--primary" (click)="visionBoard.searchSimilarFromLoveThisLook()">
+            Search Similar Look
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

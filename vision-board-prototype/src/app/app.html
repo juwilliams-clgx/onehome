@@ -1,0 +1,90 @@
+@if (!isUatRoute()) {
+  <header class="topbar">
+    <button
+      type="button"
+      class="topbar__menu-btn"
+      #menuBtn
+      aria-label="Open menu"
+      aria-haspopup="true"
+      [attr.aria-expanded]="mobileMenuOpen()"
+      (click)="toggleMobileMenu()"
+    >
+      <span class="hamburger" [class.hamburger--open]="mobileMenuOpen()">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+
+    <div class="topbar__logo" routerLink="/">one<span>home</span></div>
+
+    <nav class="topbar__nav">
+      <span routerLink="/" routerLinkActive="topbar__nav-item--active" [routerLinkActiveOptions]="{ exact: true }">
+        Buy / Rent
+      </span>
+      <span routerLink="/vision-board" routerLinkActive="topbar__nav-item--active">My Properties</span>
+      <span>Planner</span>
+      <span>Marketplace</span>
+    </nav>
+
+    <span class="topbar__world-badge">Future Concept</span>
+  </header>
+
+  <div
+    class="nav-menu-overlay"
+    [class.nav-menu-overlay--open]="mobileMenuOpen()"
+    [attr.aria-hidden]="!mobileMenuOpen()"
+    (click)="closeMobileMenu()"
+  >
+    <nav class="nav-menu" [class.nav-menu--open]="mobileMenuOpen()" (click)="$event.stopPropagation()">
+      <div class="nav-menu__accent"></div>
+
+      <div class="nav-menu__header">
+        <button type="button" class="nav-menu__close" aria-label="Close menu" (click)="closeMobileMenu()">
+          <app-icon name="close" />
+        </button>
+        <div class="nav-menu__logo">one<span>home</span></div>
+        <div class="nav-menu__actions">
+          <button type="button" class="nav-menu__icon-btn" aria-label="Notifications">
+            <app-icon name="bell" />
+            <span class="nav-menu__badge"></span>
+          </button>
+          <button type="button" class="nav-menu__avatar" aria-label="Account">
+            <app-icon name="user" />
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-menu__items">
+        <span class="nav-menu__section" routerLink="/" (click)="closeMobileMenu()">
+          Buy / Rent
+        </span>
+        <span class="nav-menu__subitem">Saved Searches</span>
+        <span class="nav-menu__subitem">New Search</span>
+
+        <span class="nav-menu__section" routerLink="/vision-board" (click)="closeMobileMenu()">My Properties</span>
+
+        <span class="nav-menu__section nav-menu__section--static">Planner</span>
+
+        <span class="nav-menu__section nav-menu__section--static">Marketplace</span>
+        <span class="nav-menu__subitem nav-menu__subitem--static">Marketplace</span>
+        <span class="nav-menu__subitem nav-menu__subitem--static">My Marketplace</span>
+        <span class="nav-menu__subitem nav-menu__subitem--static">Mortgage</span>
+        <span class="nav-menu__subitem nav-menu__subitem--static">Insurance</span>
+        <span class="nav-menu__subitem nav-menu__subitem--static">Home Professionals</span>
+
+        <span class="nav-menu__section nav-menu__section--static">Services</span>
+        <span class="nav-menu__section nav-menu__section--static">Help</span>
+      </div>
+    </nav>
+  </div>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+} @else {
+  <router-outlet />
+}
+
+<app-vision-board-modal />
+<app-confirm-unpin-modal />
+<app-love-this-look-modal />
+<app-toast />

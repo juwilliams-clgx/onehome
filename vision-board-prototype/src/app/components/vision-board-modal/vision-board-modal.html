@@ -1,0 +1,47 @@
+@if (visionBoard.isModalOpen()) {
+  <div class="overlay" (click)="visionBoard.closeModal()">
+    <div class="dialog dialog--wide vision-board" (click)="$event.stopPropagation()">
+      <button type="button" class="dialog__close" aria-label="Close" (click)="visionBoard.closeModal()">
+        <app-icon name="close" color="#52606d" />
+      </button>
+
+      <div class="dialog__scroll">
+        <h2 class="dialog__title">
+          Vision Board
+          <span class="badge--ai"><app-icon name="sparkle" /> Powered by AI</span>
+          <app-icon name="info" class="info-icon" title="We do not store or share any images you upload." />
+        </h2>
+
+        @if (visionBoard.isFull()) {
+          <p class="dialog__body">Max photos pinned &ndash; unpin any photo to pin more.</p>
+        } @else {
+          <p class="dialog__body">
+            Manage your Vision Board here, upload more inspiration, continue browsing to pin photos from other
+            properties, and launch a Vision Board search to find homes that match your aesthetic.
+          </p>
+        }
+
+        <app-vision-board-grid />
+
+        <p class="vision-board__hint">
+          Maximum 3 images<br />
+          (600 px minimum recommended)<br />
+          For best results, try uploading different kinds of images.
+        </p>
+      </div>
+
+      <div class="dialog__actions">
+        <button type="button" class="btn btn--secondary" (click)="visionBoard.closeModal()">
+          Continue Browsing
+        </button>
+        <button
+          type="button"
+          class="btn btn--primary"
+          [disabled]="visionBoard.pinnedPhotos().length === 0"
+        >
+          Launch Vision Board Search
+        </button>
+      </div>
+    </div>
+  </div>
+}

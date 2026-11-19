@@ -1,0 +1,254 @@
+.property-card {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: 1;
+}
+
+/* Only expand on genuine mouse hover; touch devices simulate :hover on tap, which left cards
+   stuck in an expanded state with no real way to "unhover" until tapping elsewhere. */
+@media (hover: hover) and (pointer: fine) {
+  .property-card:hover {
+    transform: scale(1.2);
+    z-index: 20;
+    box-shadow: 0 24px 56px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.property-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  background: #e4e7eb;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.property-card__badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  z-index: 1;
+}
+
+.property-card__status {
+  background: rgba(15, 23, 31, 0.75);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.property-card__limited-exposure {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #dee8f9;
+  color: #425676;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+
+  app-icon {
+    font-size: 1.1em;
+  }
+}
+
+.property-card__icon-row {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+
+.property-card__action {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+  app-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.property-card__action--active {
+  background: #fff;
+}
+
+.property-card__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15, 23, 31, 0.55);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.property-card__media:hover .property-card__nav {
+  opacity: 1;
+}
+
+.property-card__nav--prev {
+  left: 8px;
+}
+
+.property-card__nav--next {
+  right: 8px;
+}
+
+.property-card__dots {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.property-card__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.property-card__dot--active {
+  background: #fff;
+}
+
+@media (max-width: 640px) {
+  /* Touch has no hover to reveal these on, so they were showing up stuck-on
+     after the first tap; the dot indicator already communicates multiple
+     photos, and swiping/tapping through them belongs to the full photo
+     viewer, not the card. */
+  .property-card__nav {
+    display: none;
+  }
+}
+
+.property-card__body {
+  padding: 14px 16px 16px;
+}
+
+.property-card__price {
+  font-size: 19px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.property-card__stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #000;
+  margin-bottom: 6px;
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+.property-card__freshness {
+  margin-left: auto;
+  background: #eef2ff;
+  color: #5739d2;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 3px 7px;
+  border-radius: 999px;
+}
+
+.property-card__freshness--drop {
+  background: #fff1ee;
+  color: #c2410c;
+}
+
+.property-card__address {
+  font-size: 13px;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.property-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.property-card__agent-pick {
+  background: #fff7e6;
+  color: #92650a;
+  border: 1px solid #f2d79e;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.property-card__compare {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border: 1px solid #cbd2d9;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  app-icon {
+    font-size: 13px;
+  }
+}
+
+.property-card__compare--active {
+  background: #137a8f;
+  border-color: #137a8f;
+  color: #fff;
+}

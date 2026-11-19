@@ -1,0 +1,38 @@
+<div class="compare">
+  <div class="compare__header">
+    <a routerLink="/" class="compare__back" aria-label="Back to search">
+      <app-icon name="chevron-left" color="#000" />
+    </a>
+    <h1>Compare ({{ listings().length }})</h1>
+    @if (listings().length > 0) {
+      <button type="button" class="compare__clear" (click)="clearAll()">Clear All</button>
+    }
+  </div>
+
+  @if (listings().length === 0) {
+    <div class="compare__empty">
+      <app-icon name="compare-swap" color="#cbd2d9" />
+      <p>No properties added to Compare yet. Tap <strong>Compare</strong> on any listing to add it here.</p>
+      <a routerLink="/" class="btn btn--primary">Browse Listings</a>
+    </div>
+  } @else {
+    <div class="compare__grid">
+      @for (listing of listings(); track listing!.id) {
+        <div class="compare__card">
+          <button type="button" class="compare__remove" aria-label="Remove from compare" (click)="remove(listing!.id)">
+            <app-icon name="close" />
+          </button>
+          <img [src]="listing!.images[0]" [alt]="listing!.address" />
+          <div class="compare__price">{{ formatPrice(listing!.price) }}</div>
+          <dl class="compare__stats">
+            <div><dt>Beds</dt><dd>{{ listing!.beds }}</dd></div>
+            <div><dt>Baths</dt><dd>{{ listing!.baths }}</dd></div>
+            <div><dt>Sqft</dt><dd>{{ listing!.sqft.toLocaleString() }}</dd></div>
+            <div><dt>Status</dt><dd>{{ listing!.status }}</dd></div>
+          </dl>
+          <div class="compare__address">{{ listing!.address }}, {{ listing!.cityStateZip }}</div>
+        </div>
+      }
+    </div>
+  }
+</div>
