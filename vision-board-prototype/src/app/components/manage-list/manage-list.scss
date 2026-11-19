@@ -664,39 +664,54 @@
  * Fix: contain the overflow to local scrollable strips (same pattern used
  * elsewhere in this app for an overflowing nav row) instead of letting it
  * reach the document, plus a defensive overflow guard on the page itself.
+ *
+ * This containment is applied unconditionally (not inside a breakpoint):
+ * a narrower first fix only covered viewports under 640px, which still let
+ * the same overflow - and the same off-screen dialog - recur at ~768px
+ * (iPad-portrait-width devices/windows). There's no real viewport width
+ * where this guard is wrong to have: on anything wide enough that the nav
+ * and tabs already fit, `overflow-x: auto` never shows a scrollbar or
+ * changes layout; it only engages exactly when content would otherwise
+ * overflow the page, at any width.
  */
-@media (max-width: 640px) {
-  .mp {
-    overflow-x: hidden;
-  }
+.mp {
+  overflow-x: hidden;
+}
 
+.mp__nav-links {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mp__nav-right {
+  flex-shrink: 0;
+}
+
+.mp__tabs {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mp__tab {
+  flex-shrink: 0;
+}
+
+.mp__tabs-right {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
   .mp__nav {
     gap: 16px;
     padding: 12px 16px;
   }
 
-  .mp__nav-links {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .mp__nav-right {
-    flex-shrink: 0;
     gap: 14px;
   }
 
   .mp__tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 0 16px;
-  }
-
-  .mp__tab {
-    flex-shrink: 0;
-  }
-
-  .mp__tabs-right {
-    flex-shrink: 0;
   }
 
   .mp__results {
