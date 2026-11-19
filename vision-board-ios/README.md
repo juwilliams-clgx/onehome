@@ -130,6 +130,26 @@ rotate-then-reset flow) is the piece most worth a hands-on pass in Xcode
 once full Xcode is available — `swiftc -parse` confirms syntax, not that the
 gesture composition feels right on a real device.
 
+## Service Unavailable fallback (preview)
+
+A reviewable concept, not a wired feature: neither platform has a real
+splash/login flow yet, so there's nothing to attach a genuine backend-down
+state to. `ServiceUnavailableView`, reached from the nav menu's new
+**Service Unavailable (Preview)** item, mirrors the web mockup
+([service-unavailable-mockup](../vision-board-prototype/src/app/components/service-unavailable-mockup)):
+a Splash/Login segmented toggle over one shared card (neither screen can
+show anything meaningful without listing data, so one design serves both),
+the exact approved copy, and a two-step "Try Again" demo — first tap shows a
+"still having trouble" state, second tap simulates recovery.
+
+| Web pattern | iOS replacement | Why |
+|---|---|---|
+| Reused `rotate` icon (circular retry arrow) in a tinted circle badge | SF Symbol `arrow.triangle.2.circlepath` in the same tinted circle, spinning while retrying | Same semantic — avoided any wifi/cloud-with-slash icon on both platforms, since that would wrongly imply the *user's* connection is at fault, contradicting "It's not you" |
+| Splash/Login pill toggle | Native `Picker` with `.pickerStyle(.segmented)` | A segmented control is the native, HIG-expected equivalent of a two-option toggle |
+| Faint, non-interactive login fields shown behind the card in Login context | Same fields at reduced opacity/saturation, `allowsHitTesting(false)` | Direct port of "represents the screen without competing with the fallback message" |
+| Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |
+| Two-attempt retry demo navigating to `/` on success | Same two-attempt counter, `dismiss()` on success (pops back to the real app) | Native has no root route to redirect to, so popping the preview off the stack is the equivalent "you're back in the app" signal |
+
 ## Structure
 
 ```
@@ -167,6 +187,7 @@ VisionBoardIOS/
     AgentListingsView.swift     Agent Tools listing picker
     AgentPhotoUploadView.swift  Agent batch photo review/crop/save workflow
     PhotoCropperView.swift      Reusable full-screen "pinch to fill" cropper
+    ServiceUnavailableView.swift Splash/Login outage-fallback preview (not wired to a real flow)
   Resources/
     MockListings.swift         Same 8 listings as mock-listings.ts (same coords, prices, photos)
     MockPhotos.swift           Same Unsplash stand-in photos as mock-photos.ts

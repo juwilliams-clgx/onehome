@@ -8,6 +8,7 @@ import { UatPropertyListComponent } from './components/uat-property-list/uat-pro
 import { CompareViewComponent } from './components/compare-view/compare-view';
 import { AgentListingsComponent } from './components/agent-listings/agent-listings';
 import { AgentPhotoUploadComponent } from './components/agent-photo-upload/agent-photo-upload';
+import { ServiceUnavailableMockupComponent } from './components/service-unavailable-mockup/service-unavailable-mockup';
 
 export const routes: Routes = [
   { path: '', component: PropertyGridComponent },
@@ -30,5 +31,6 @@ export const routes: Routes = [
   { path: 'uat/properties', component: UatPropertyListComponent },
   { path: 'agent/listings', component: AgentListingsComponent },
   { path: 'agent/listings/:id/photos', component: AgentPhotoUploadComponent },
+  { path: 'mockup/service-unavailable', component: ServiceUnavailableMockupComponent },
 ];
 

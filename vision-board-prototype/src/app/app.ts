@@ -33,13 +33,16 @@ export class App {
     { initialValue: null },
   );
 
-  /** Pixel-accurate replica pages (UAT + My Properties) and the agent-only tools render their own chrome; the Future app shell must not show. */
+  /** Pixel-accurate replica pages (UAT + My Properties), the agent-only tools, and the
+   * pre-login service-unavailable mockup render their own chrome; the Future app shell
+   * must not show (splash/login screens appear before/without the normal app shell). */
   protected readonly isUatRoute = computed(() => {
     this.url();
     return (
       this.router.url.startsWith('/uat') ||
       this.router.url.startsWith('/my-properties') ||
-      this.router.url.startsWith('/agent')
+      this.router.url.startsWith('/agent') ||
+      this.router.url.startsWith('/mockup/service-unavailable')
     );
   });
 

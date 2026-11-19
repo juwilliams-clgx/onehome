@@ -48,6 +48,11 @@ struct ContentView: View {
                     AgentPhotoUploadView(listing: listing)
                 }
             }
+            .navigationDestination(for: ServiceUnavailableRoute.self) { _ in
+                ServiceUnavailableView()
+                    .navigationTitle("Preview")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
         }
         .overlay(alignment: .bottom) {
             if let current = toast.current {
@@ -62,6 +67,8 @@ struct ContentView: View {
                 navigationPath.append(ManageListRoute(kind: kind))
             } onAgentTools: {
                 navigationPath.append(AgentListingsRoute())
+            } onServiceUnavailablePreview: {
+                navigationPath.append(ServiceUnavailableRoute())
             }
         }
         .sheet(isPresented: Binding(

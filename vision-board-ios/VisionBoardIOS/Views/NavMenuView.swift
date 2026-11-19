@@ -11,6 +11,7 @@ struct NavMenuView: View {
     var onSelect: (TopSection) -> Void
     var onManageList: (ManagedListKind) -> Void = { _ in }
     var onAgentTools: () -> Void = {}
+    var onServiceUnavailablePreview: () -> Void = {}
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -81,6 +82,13 @@ struct NavMenuView: View {
                     }
                     subitemRow("Upload Photos") {
                         onAgentTools()
+                        close()
+                    }
+
+                    Divider().padding(.vertical, 8)
+
+                    sectionRow("Service Unavailable (Preview)") {
+                        onServiceUnavailablePreview()
                         close()
                     }
                 }

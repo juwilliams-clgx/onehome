@@ -40,6 +40,7 @@
 		5532EDA6D2164A31A3702259 /* PhotoCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEB59F790CA4EF7A18CE2D8 /* PhotoCropperView.swift */; };
 		C70DF3A2875B44D089E5CE1A /* AgentListingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA2B19621FC475F88F57677 /* AgentListingsView.swift */; };
 		71BBD63BA37548C8BE1D4BE7 /* AgentPhotoUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA74189F0C24376AE6EC30C /* AgentPhotoUploadView.swift */; };
+		EC663D93D2274C37BEF3CBBB /* ServiceUnavailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04518645787495FA63F8512 /* ServiceUnavailableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,7 @@
 		7EEB59F790CA4EF7A18CE2D8 /* PhotoCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCropperView.swift; sourceTree = "<group>"; };
 		0CA2B19621FC475F88F57677 /* AgentListingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentListingsView.swift; sourceTree = "<group>"; };
 		BBA74189F0C24376AE6EC30C /* AgentPhotoUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentPhotoUploadView.swift; sourceTree = "<group>"; };
+		C04518645787495FA63F8512 /* ServiceUnavailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUnavailableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				7EEB59F790CA4EF7A18CE2D8 /* PhotoCropperView.swift */,
 				0CA2B19621FC475F88F57677 /* AgentListingsView.swift */,
 				BBA74189F0C24376AE6EC30C /* AgentPhotoUploadView.swift */,
+				C04518645787495FA63F8512 /* ServiceUnavailableView.swift */,
 				73CFBF0C5AC645979A403F25 /* ManageListView.swift */,
 				B8D3313541C64EAD9EEBCFC9 /* SearchHeaderView.swift */,
 				4C71A5EC4B2C4EE8BD41FCEF /* CompareView.swift */,
@@ -252,6 +255,7 @@
 				5532EDA6D2164A31A3702259 /* PhotoCropperView.swift in Sources */,
 				C70DF3A2875B44D089E5CE1A /* AgentListingsView.swift in Sources */,
 				71BBD63BA37548C8BE1D4BE7 /* AgentPhotoUploadView.swift in Sources */,
+				EC663D93D2274C37BEF3CBBB /* ServiceUnavailableView.swift in Sources */,
 				693692F523DC4E98A4CD4D86 /* ManageListView.swift in Sources */,
 				6D5450F8DD88430A8BB1A2D0 /* CompareStore.swift in Sources */,
 				0809A48C9DC34262AD5227F3 /* LocationStore.swift in Sources */,
