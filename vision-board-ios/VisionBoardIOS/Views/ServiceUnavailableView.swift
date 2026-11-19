@@ -141,7 +141,6 @@ struct ServiceUnavailableView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(Color(red: 0.075, green: 0.478, blue: 0.561))
-            .clipShape(Capsule())
             .disabled(retrying)
             .padding(.bottom, 10)
 
