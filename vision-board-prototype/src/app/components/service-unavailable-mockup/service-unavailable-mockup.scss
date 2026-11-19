@@ -108,30 +108,10 @@
   gap: 4px;
 }
 
-.su__icon-badge {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: #eaf6f4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-
-  app-icon {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-.su__icon-badge--spin app-icon {
-  animation: su-spin 0.9s linear infinite;
-}
-
-@keyframes su-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.su__illustration {
+  width: 148px;
+  height: 148px;
+  margin-bottom: 12px;
 }
 
 .su__headline {
@@ -209,6 +189,12 @@
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-top-color: #fff;
   animation: su-spin 0.7s linear infinite;
+}
+
+@keyframes su-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .su__support-link {

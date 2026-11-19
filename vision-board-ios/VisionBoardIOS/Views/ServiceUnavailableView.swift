@@ -24,7 +24,6 @@ struct ServiceUnavailableView: View {
     @State private var retrying = false
     @State private var stillDown = false
     @State private var attempts = 0
-    @State private var spin = false
 
     var body: some View {
         VStack(spacing: 24) {
@@ -103,17 +102,11 @@ struct ServiceUnavailableView: View {
 
     private var card: some View {
         VStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(Color(red: 0.918, green: 0.965, blue: 0.957))
-                    .frame(width: 84, height: 84)
-                Image(systemName: "arrow.triangle.2.circlepath")
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
-                    .rotationEffect(.degrees(spin ? 360 : 0))
-                    .animation(retrying ? .linear(duration: 0.9).repeatForever(autoreverses: false) : .default, value: spin)
-            }
-            .padding(.bottom, 16)
+            Image("illustration-house-search")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 148, height: 148)
+                .padding(.bottom, 12)
 
             Text("It\u{2019}s not you, it\u{2019}s our wiring.")
                 .font(.title2.bold())
@@ -164,12 +157,10 @@ struct ServiceUnavailableView: View {
         guard !retrying else { return }
         retrying = true
         stillDown = false
-        spin = true
         attempts += 1
         Task {
             try? await Task.sleep(for: .milliseconds(1100))
             retrying = false
-            spin = false
             if attempts >= 2 {
                 dismiss()
             } else {

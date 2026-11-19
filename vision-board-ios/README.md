@@ -144,7 +144,7 @@ the exact approved copy, and a two-step "Try Again" demo — first tap shows a
 
 | Web pattern | iOS replacement | Why |
 |---|---|---|
-| Reused `rotate` icon (circular retry arrow) in a tinted circle badge | SF Symbol `arrow.triangle.2.circlepath` in the same tinted circle, spinning while retrying | Same semantic — avoided any wifi/cloud-with-slash icon on both platforms, since that would wrongly imply the *user's* connection is at fault, contradicting "It's not you" |
+| Reused `illustration-house-search.svg` | Same SVG, rendered via Chromium at 2x/4x/6x density and dropped into `Assets.xcassets/illustration-house-search.imageset` as a 1x/2x/3x PNG set | No SVG renderer on iOS without a third-party library; a pre-rendered raster set at proportionally-correct scale factors is the practical native equivalent, and reusing the existing brand illustration (rather than designing a new one) keeps both platforms visually identical |
 | Splash/Login pill toggle | Native `Picker` with `.pickerStyle(.segmented)` | A segmented control is the native, HIG-expected equivalent of a two-option toggle |
 | Faint, non-interactive login fields shown behind the card in Login context | Same fields at reduced opacity/saturation, `allowsHitTesting(false)` | Direct port of "represents the screen without competing with the fallback message" |
 | Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |
