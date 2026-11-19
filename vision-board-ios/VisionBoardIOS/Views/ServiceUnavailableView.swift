@@ -9,13 +9,31 @@ private enum PreviewContext: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+/// A teal banner with a diagonal bottom edge, matching the real OneHome sign-in
+/// screen's header (vs. a plain rectangle) so this fallback reads as "the sign-in
+/// screen, paused" rather than a generic error page.
+private struct DiagonalHeaderShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.90))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.72))
+        path.closeSubpath()
+        return path
+    }
+}
+
 /// Reviewable concept for the "orchestration layer is down, no MLS data" fallback -
-/// mirrors vision-board-prototype's ServiceUnavailableMockupComponent. The same
-/// designed state covers both the splash and login touchpoints (nothing meaningful
-/// can render on either without listing data, so there's one design, not two). Not
-/// wired to a real splash/login flow or backend; this app has neither yet. Retry is a
-/// believable two-step demo (still down, then recovers) so a reviewer can see both
-/// outcomes without a real backend to fail against.
+/// mirrors vision-board-prototype's ServiceUnavailableMockupComponent, which in turn
+/// is modeled on OneHome's real sign-in screen (teal diagonal header -> headline ->
+/// body copy -> form position -> primary button -> secondary link footer), so the
+/// fallback reads as "the sign-in screen, paused" rather than a generic error page.
+/// The same designed state covers both the splash and login touchpoints (nothing
+/// meaningful can render on either without listing data, so there's one design, not
+/// two). Not wired to a real splash/login flow or backend; this app has neither yet.
+/// Retry is a believable two-step demo (still down, then recovers) so a reviewer can
+/// see both outcomes without a real backend to fail against.
 struct ServiceUnavailableView: View {
     @Environment(ToastCenter.self) private var toast
     @Environment(\.dismiss) private var dismiss
@@ -37,22 +55,13 @@ struct ServiceUnavailableView: View {
             .padding(.top, 12)
 
             VStack(spacing: 0) {
-                logo
-                    .padding(.top, 40)
-
-                if context == .login {
-                    loginChrome
-                        .padding(.top, 24)
-                        .padding(.horizontal, 24)
-                }
-
-                Spacer()
+                header
 
                 card
-                    .padding(.horizontal, 28)
+                    .padding(.horizontal, 24)
+                    .padding(.top, -28)
 
-                Spacer()
-                Spacer()
+                footer
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemBackground))
@@ -74,50 +83,61 @@ struct ServiceUnavailableView: View {
         .navigationBarBackButtonHidden(false)
     }
 
-    private var logo: some View {
-        (Text("one").bold() + Text("home").bold().foregroundStyle(Color(red: 1, green: 0.42, blue: 0.42)))
+    private var header: some View {
+        (Text("one").bold() + Text("home").bold())
             .font(.title2)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 24)
+            .padding(.top, 28)
+            .padding(.bottom, 56)
+            .background(
+                DiagonalHeaderShape().fill(Color(red: 0.075, green: 0.478, blue: 0.561))
+            )
     }
 
     private var loginChrome: some View {
-        VStack(spacing: 10) {
-            placeholderField("Email")
-            placeholderField("Password")
-            placeholderField("Sign In", filled: true)
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Email address").font(.caption.bold())
+            placeholderField()
+            Text("Password").font(.caption.bold()).padding(.top, 8)
+            placeholderField()
         }
-        .opacity(0.35)
-        .saturation(0.5)
+        .foregroundStyle(.secondary)
+        .opacity(0.4)
         .allowsHitTesting(false)
+        .padding(.top, 8)
+        .padding(.bottom, 14)
     }
 
-    private func placeholderField(_ label: String, filled: Bool = false) -> some View {
-        Text(label)
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 14)
-            .frame(height: 44)
-            .background(filled ? Color(.systemGray4) : Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 10))
+    private func placeholderField() -> some View {
+        RoundedRectangle(cornerRadius: 8)
+            .strokeBorder(Color(.systemGray3))
+            .frame(height: 38)
     }
 
     private var card: some View {
         VStack(spacing: 6) {
-            Image("illustration-house-search")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 148, height: 148)
-                .padding(.bottom, 12)
-
             Text("It\u{2019}s not you, it\u{2019}s our wiring.")
                 .font(.title2.bold())
                 .multilineTextAlignment(.center)
+                .padding(.top, 20)
 
             Text("We\u{2019}re having a quick hiccup connecting to our home listings right now. Your account is safe\u{2014}just give us a few minutes to get things back in order.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 8)
-                .padding(.bottom, 18)
+
+            if context == .login {
+                loginChrome
+            }
+
+            Image("illustration-house-search")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
+                .padding(.vertical, 10)
 
             if stillDown {
                 Label("Still having trouble \u{2014} we\u{2019}ll keep trying in the background.", systemImage: "info.circle.fill")
@@ -125,7 +145,7 @@ struct ServiceUnavailableView: View {
                     .foregroundStyle(Color(red: 0.541, green: 0.353, blue: 0))
                     .padding(10)
                     .background(Color(red: 1, green: 0.969, blue: 0.902), in: RoundedRectangle(cornerRadius: 10))
-                    .padding(.bottom, 14)
+                    .padding(.bottom, 6)
             }
 
             Button(action: retry) {
@@ -140,16 +160,19 @@ struct ServiceUnavailableView: View {
                 .padding(.vertical, 6)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.075, green: 0.478, blue: 0.561))
+            .tint(Color(red: 0.271, green: 0.467, blue: 0.714))
             .disabled(retrying)
-            .padding(.bottom, 10)
-
-            Button("Contact Support") {
-                toast.show("support@onehome.com \u{b7} (800) 555-0199")
-            }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
         }
+    }
+
+    private var footer: some View {
+        Button("Contact Support") {
+            toast.show("support@onehome.com \u{b7} (800) 555-0199")
+        }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.secondarySystemBackground))
     }
 
     private func retry() {

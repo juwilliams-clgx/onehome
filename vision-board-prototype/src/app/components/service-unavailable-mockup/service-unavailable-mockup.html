@@ -20,24 +20,27 @@
 
   <div class="su-page__frame">
     <div class="su">
-      <div class="su__logo">one<span>home</span></div>
-
-      @if (context() === 'login') {
-        <div class="su__login-chrome" aria-hidden="true">
-          <span class="su__login-field">Email</span>
-          <span class="su__login-field">Password</span>
-          <span class="su__login-btn">Sign In</span>
-        </div>
-      }
+      <div class="su__header">
+        <div class="su__logo">one<span>home</span></div>
+      </div>
 
       <div class="su__card">
-        <img class="su__illustration" src="illustration-house-search.svg" alt="" aria-hidden="true" />
-
         <h1 class="su__headline">It&rsquo;s not you, it&rsquo;s our wiring.</h1>
         <p class="su__body">
           We&rsquo;re having a quick hiccup connecting to our home listings right now. Your account is safe&mdash;just
           give us a few minutes to get things back in order.
         </p>
+
+        @if (context() === 'login') {
+          <div class="su__login-chrome" aria-hidden="true">
+            <span class="su__login-field-label">Email address</span>
+            <span class="su__login-field"></span>
+            <span class="su__login-field-label">Password</span>
+            <span class="su__login-field"></span>
+          </div>
+        }
+
+        <img class="su__illustration" src="illustration-house-search.svg" alt="" aria-hidden="true" />
 
         @if (stillDown()) {
           <p class="su__still-down">
@@ -53,6 +56,9 @@
             Try Again
           }
         </button>
+      </div>
+
+      <div class="su__footer">
         <a class="su__support-link" (click)="contactSupport()">Contact Support</a>
       </div>
     </div>
