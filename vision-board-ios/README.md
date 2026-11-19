@@ -143,18 +143,17 @@ the exact approved copy, and a two-step "Try Again" demo — first tap shows a
 "still having trouble" state, second tap simulates recovery.
 
 Both platforms' layout is modeled directly on OneHome's real sign-in screen
-(a user-provided screenshot), not a generic error-page template: a teal
-diagonal-edge header banner with the wordmark, then headline → body copy →
-(illustration, standing in for the form that can't render without a
-backend) → primary button → a separate footer strip for the secondary
-link — the same vertical hierarchy and the exact Sign In button color
-(`#4577b6`) as the real screen, so this reads as "the sign-in screen,
-paused" rather than a disconnected error state.
+(a user-provided screenshot), not a generic error-page template: headline →
+body copy → (illustration, standing in for the form that can't render
+without a backend) → primary button → a separate footer strip for the
+secondary link — the same vertical hierarchy and the exact Sign In button
+color (`#4577b6`) as the real screen. No header banner or background color
+shift between the card and footer, per follow-up feedback simplifying
+toward a single flat white surface.
 
 | Web pattern | iOS replacement | Why |
 |---|---|---|
 | Reused `illustration-house-search.svg` | Same SVG, rendered via Chromium at 2x/4x/6x density and dropped into `Assets.xcassets/illustration-house-search.imageset` as a 1x/2x/3x PNG set | No SVG renderer on iOS without a third-party library; a pre-rendered raster set at proportionally-correct scale factors is the practical native equivalent, and reusing the existing brand illustration (rather than designing a new one) keeps both platforms visually identical |
-| Teal header with `clip-path: polygon(...)` diagonal bottom edge | Custom `DiagonalHeaderShape: Shape` with the same four-point path | SwiftUI has no CSS clip-path equivalent, so a custom `Shape` is the direct native translation of the same geometry |
 | Splash/Login pill toggle | Native `Picker` with `.pickerStyle(.segmented)` | A segmented control is the native, HIG-expected equivalent of a two-option toggle |
 | Faint, labeled Email/Password field outlines shown between body copy and the illustration in Login context | Same labels + `RoundedRectangle` outlines at reduced opacity, `allowsHitTesting(false)` | Direct port, positioned where the real form sits rather than floating separately |
 | Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |

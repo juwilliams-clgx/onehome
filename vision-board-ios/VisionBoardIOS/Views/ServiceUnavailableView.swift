@@ -9,31 +9,16 @@ private enum PreviewContext: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-/// A teal banner with a diagonal bottom edge, matching the real OneHome sign-in
-/// screen's header (vs. a plain rectangle) so this fallback reads as "the sign-in
-/// screen, paused" rather than a generic error page.
-private struct DiagonalHeaderShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY + rect.height * 0.90))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + rect.height * 0.72))
-        path.closeSubpath()
-        return path
-    }
-}
-
 /// Reviewable concept for the "orchestration layer is down, no MLS data" fallback -
 /// mirrors vision-board-prototype's ServiceUnavailableMockupComponent, which in turn
-/// is modeled on OneHome's real sign-in screen (teal diagonal header -> headline ->
-/// body copy -> form position -> primary button -> secondary link footer), so the
-/// fallback reads as "the sign-in screen, paused" rather than a generic error page.
-/// The same designed state covers both the splash and login touchpoints (nothing
-/// meaningful can render on either without listing data, so there's one design, not
-/// two). Not wired to a real splash/login flow or backend; this app has neither yet.
-/// Retry is a believable two-step demo (still down, then recovers) so a reviewer can
-/// see both outcomes without a real backend to fail against.
+/// is modeled on OneHome's real sign-in screen (headline -> body copy -> form
+/// position -> primary button -> secondary link footer), so the fallback reads as
+/// "the sign-in screen, paused" rather than a generic error page. The same designed
+/// state covers both the splash and login touchpoints (nothing meaningful can render
+/// on either without listing data, so there's one design, not two). Not wired to a
+/// real splash/login flow or backend; this app has neither yet. Retry is a
+/// believable two-step demo (still down, then recovers) so a reviewer can see both
+/// outcomes without a real backend to fail against.
 struct ServiceUnavailableView: View {
     @Environment(ToastCenter.self) private var toast
     @Environment(\.dismiss) private var dismiss
@@ -55,11 +40,9 @@ struct ServiceUnavailableView: View {
             .padding(.top, 12)
 
             VStack(spacing: 0) {
-                header
-
                 card
                     .padding(.horizontal, 24)
-                    .padding(.top, -28)
+                    .padding(.top, 48)
 
                 footer
             }
@@ -81,19 +64,6 @@ struct ServiceUnavailableView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.secondarySystemBackground))
         .navigationBarBackButtonHidden(false)
-    }
-
-    private var header: some View {
-        (Text("one").bold() + Text("home").bold())
-            .font(.title2)
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, 24)
-            .padding(.top, 28)
-            .padding(.bottom, 56)
-            .background(
-                DiagonalHeaderShape().fill(Color(red: 0.075, green: 0.478, blue: 0.561))
-            )
     }
 
     private var loginChrome: some View {
@@ -172,7 +142,7 @@ struct ServiceUnavailableView: View {
         .font(.subheadline.weight(.semibold))
         .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.secondarySystemBackground))
+        .background(Color(.systemBackground))
     }
 
     private func retry() {
