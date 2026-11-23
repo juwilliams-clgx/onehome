@@ -103,10 +103,10 @@ struct ServiceUnavailableView: View {
                 loginChrome
             }
 
-            Image("illustration-house-search")
+            Image("illustration-wet-floor-sign")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 120, height: 120)
+                .frame(width: 108)
                 .padding(.vertical, 10)
 
             if stillDown {

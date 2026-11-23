@@ -153,7 +153,7 @@ toward a single flat white surface.
 
 | Web pattern | iOS replacement | Why |
 |---|---|---|
-| Reused `illustration-house-search.svg` | Same SVG, rendered via Chromium at 2x/4x/6x density and dropped into `Assets.xcassets/illustration-house-search.imageset` as a 1x/2x/3x PNG set | No SVG renderer on iOS without a third-party library; a pre-rendered raster set at proportionally-correct scale factors is the practical native equivalent, and reusing the existing brand illustration (rather than designing a new one) keeps both platforms visually identical |
+| User-provided `illustration-wet-floor-sign.png` ("it's not you, caution in progress") | Same PNG, downsampled with PIL into `Assets.xcassets/illustration-wet-floor-sign.imageset` as a 1x/2x/3x set (108/216/324pt wide, matching the source's native aspect ratio) | Already a raster asset, so no SVG-conversion step was needed this time; scaling down from the single high-res source avoids upscaling artifacts at any density |
 | Splash/Login pill toggle | Native `Picker` with `.pickerStyle(.segmented)` | A segmented control is the native, HIG-expected equivalent of a two-option toggle |
 | Faint, labeled Email/Password field outlines shown between body copy and the illustration in Login context | Same labels + `RoundedRectangle` outlines at reduced opacity, `allowsHitTesting(false)` | Direct port, positioned where the real form sits rather than floating separately |
 | Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |
