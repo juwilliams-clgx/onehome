@@ -1,12 +1,12 @@
 <div class="su-page">
   <div class="su">
+    <img class="su__illustration" src="illustration-wet-floor-sign.png" alt="" aria-hidden="true" />
+
     <h1 class="su__headline">It&rsquo;s not you, it&rsquo;s our wiring.</h1>
     <p class="su__body">
       We&rsquo;re having a quick hiccup connecting to our home listings right now. Your account is safe&mdash;just
       give us a few minutes to get things back in order.
     </p>
-
-    <img class="su__illustration" src="illustration-wet-floor-sign.png" alt="" aria-hidden="true" />
 
     @if (stillDown()) {
       <p class="su__still-down">
@@ -24,8 +24,4 @@
     </button>
     <a class="su__support-link" (click)="contactSupport()">Contact Support</a>
   </div>
-
-  <p class="su-page__note">
-    Preview only &mdash; not wired to a real backend. Tap &ldquo;Try Again&rdquo; twice to see the recovered state.
-  </p>
 </div>

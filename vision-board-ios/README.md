@@ -142,15 +142,15 @@ the exact approved copy and a two-step "Try Again" demo — first tap shows a
 app's one entry point (sign-in); there's no separate splash flow to design
 for, and login fields are never shown on this screen in any scenario.
 
-Both platforms' layout is modeled directly on OneHome's real sign-in screen
-(a user-provided screenshot), not a generic error-page template: headline →
-body copy → illustration (standing in for the form that can't render
-without a backend) → primary button → secondary link, the same vertical
-hierarchy and the exact Sign In button color (`#4577b6`) as the real
-screen. It's a true responsive layout — content is centered in a readable
-column at any viewport width rather than boxed into a fixed phone-sized
-frame — so it reads correctly on web (desktop and mobile) and on both
-iPhone and iPad, not just a mobile browser.
+Both platforms' visual hierarchy is: illustration → headline → support
+text → primary CTA ("Try Again") → secondary action ("Contact Support"),
+leading with the illustration rather than the headline. It's a true
+responsive layout — content is centered in a readable column at any
+viewport width rather than boxed into a fixed phone-sized frame — so it
+reads correctly on web (desktop and mobile) and on both iPhone and iPad,
+not just a mobile browser. The layout and the exact Sign In button color
+(`#4577b6`) are modeled on a user-provided screenshot of OneHome's real
+sign-in screen, not a generic error-page template.
 
 | Web pattern | iOS replacement | Why |
 |---|---|---|

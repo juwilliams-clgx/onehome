@@ -22,7 +22,7 @@
 .su__illustration {
   width: 108px;
   height: auto;
-  margin: 4px 0 10px;
+  margin: 0 0 20px;
 }
 
 .su__headline {
@@ -119,13 +119,4 @@
   &:hover {
     text-decoration: underline;
   }
-}
-
-.su-page__note {
-  max-width: 420px;
-  text-align: center;
-  font-size: 12px;
-  color: #8a98a6;
-  line-height: 1.5;
-  margin: 0;
 }

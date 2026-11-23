@@ -5,15 +5,15 @@ struct ServiceUnavailableRoute: Hashable {}
 
 /// Reviewable concept for the "orchestration layer is down, no MLS data" fallback -
 /// mirrors vision-board-prototype's ServiceUnavailableMockupComponent, which in turn
-/// is modeled on OneHome's real sign-in screen (headline -> body copy -> illustration
-/// -> primary button -> secondary link), so the fallback reads as "the sign-in
-/// screen, paused" rather than a generic error page. Covers the app's one entry
-/// point (sign-in; there's no separate splash flow, and login fields are never
-/// shown here). A true responsive layout - content is centered in a readable column
-/// at any width, not boxed into a fixed phone-sized frame - so it reads correctly on
-/// both iPhone and iPad. Not wired to a real sign-in flow or backend. Retry is a
-/// believable two-step demo (still down, then recovers) so a reviewer can see both
-/// outcomes without a real backend to fail against.
+/// is modeled on OneHome's real sign-in screen, with the hierarchy ordered as:
+/// illustration -> headline -> support text -> primary CTA -> secondary action.
+/// Covers the app's one entry point (sign-in; there's no separate splash flow, and
+/// login fields are never shown here). A true responsive layout - content is
+/// centered in a readable column at any width, not boxed into a fixed phone-sized
+/// frame - so it reads correctly on both iPhone and iPad. Not wired to a real
+/// sign-in flow or backend. Retry is a believable two-step demo (still down, then
+/// recovers) so a reviewer can see both outcomes without a real backend to fail
+/// against.
 struct ServiceUnavailableView: View {
     @Environment(ToastCenter.self) private var toast
     @Environment(\.dismiss) private var dismiss
@@ -24,6 +24,11 @@ struct ServiceUnavailableView: View {
 
     var body: some View {
         VStack(spacing: 24) {
+            Image("illustration-wet-floor-sign")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 108)
+
             Text("It\u{2019}s not you, it\u{2019}s our wiring.")
                 .font(.title.bold())
                 .multilineTextAlignment(.center)
@@ -32,11 +37,6 @@ struct ServiceUnavailableView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-
-            Image("illustration-wet-floor-sign")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 108)
 
             if stillDown {
                 Label("Still having trouble \u{2014} we\u{2019}ll keep trying in the background.", systemImage: "info.circle.fill")
