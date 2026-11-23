@@ -3,111 +3,40 @@ import SwiftUI
 /// Route marker for pushing the service-unavailable preview from the nav menu.
 struct ServiceUnavailableRoute: Hashable {}
 
-private enum PreviewContext: String, CaseIterable, Identifiable {
-    case splash = "Splash"
-    case login = "Login"
-    var id: String { rawValue }
-}
-
 /// Reviewable concept for the "orchestration layer is down, no MLS data" fallback -
 /// mirrors vision-board-prototype's ServiceUnavailableMockupComponent, which in turn
-/// is modeled on OneHome's real sign-in screen (headline -> body copy -> form
-/// position -> primary button -> secondary link footer), so the fallback reads as
-/// "the sign-in screen, paused" rather than a generic error page. The same designed
-/// state covers both the splash and login touchpoints (nothing meaningful can render
-/// on either without listing data, so there's one design, not two). Not wired to a
-/// real splash/login flow or backend; this app has neither yet. Retry is a
+/// is modeled on OneHome's real sign-in screen (headline -> body copy -> illustration
+/// -> primary button -> secondary link), so the fallback reads as "the sign-in
+/// screen, paused" rather than a generic error page. Covers the app's one entry
+/// point (sign-in; there's no separate splash flow, and login fields are never
+/// shown here). A true responsive layout - content is centered in a readable column
+/// at any width, not boxed into a fixed phone-sized frame - so it reads correctly on
+/// both iPhone and iPad. Not wired to a real sign-in flow or backend. Retry is a
 /// believable two-step demo (still down, then recovers) so a reviewer can see both
 /// outcomes without a real backend to fail against.
 struct ServiceUnavailableView: View {
     @Environment(ToastCenter.self) private var toast
     @Environment(\.dismiss) private var dismiss
 
-    @State private var context: PreviewContext = .splash
     @State private var retrying = false
     @State private var stillDown = false
     @State private var attempts = 0
 
     var body: some View {
         VStack(spacing: 24) {
-            Picker("Preview context", selection: $context) {
-                ForEach(PreviewContext.allCases) { c in
-                    Text(c.rawValue).tag(c)
-                }
-            }
-            .pickerStyle(.segmented)
-            .frame(maxWidth: 240)
-            .padding(.top, 12)
-
-            VStack(spacing: 0) {
-                card
-                    .padding(.horizontal, 24)
-                    .padding(.top, 48)
-
-                footer
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 28))
-            .overlay(RoundedRectangle(cornerRadius: 28).strokeBorder(Color(.separator)))
-            .shadow(color: .black.opacity(0.1), radius: 24, y: 12)
-            .frame(maxWidth: 390)
-            .padding(.horizontal, 20)
-
-            Text("Preview only — the same fallback design covers both the splash and login entry points, since neither can show anything meaningful without listing data. Tap \u{201c}Try Again\u{201d} twice to see the recovered state.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-                .padding(.bottom, 16)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.secondarySystemBackground))
-        .navigationBarBackButtonHidden(false)
-    }
-
-    private var loginChrome: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Email address").font(.caption.bold())
-            placeholderField()
-            Text("Password").font(.caption.bold()).padding(.top, 8)
-            placeholderField()
-        }
-        .foregroundStyle(.secondary)
-        .opacity(0.4)
-        .allowsHitTesting(false)
-        .padding(.top, 8)
-        .padding(.bottom, 14)
-    }
-
-    private func placeholderField() -> some View {
-        RoundedRectangle(cornerRadius: 8)
-            .strokeBorder(Color(.systemGray3))
-            .frame(height: 38)
-    }
-
-    private var card: some View {
-        VStack(spacing: 6) {
             Text("It\u{2019}s not you, it\u{2019}s our wiring.")
-                .font(.title2.bold())
+                .font(.title.bold())
                 .multilineTextAlignment(.center)
-                .padding(.top, 20)
 
             Text("We\u{2019}re having a quick hiccup connecting to our home listings right now. Your account is safe\u{2014}just give us a few minutes to get things back in order.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 8)
-
-            if context == .login {
-                loginChrome
-            }
 
             Image("illustration-wet-floor-sign")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 108)
-                .padding(.vertical, 10)
 
             if stillDown {
                 Label("Still having trouble \u{2014} we\u{2019}ll keep trying in the background.", systemImage: "info.circle.fill")
@@ -115,34 +44,37 @@ struct ServiceUnavailableView: View {
                     .foregroundStyle(Color(red: 0.541, green: 0.353, blue: 0))
                     .padding(10)
                     .background(Color(red: 1, green: 0.969, blue: 0.902), in: RoundedRectangle(cornerRadius: 10))
-                    .padding(.bottom, 6)
             }
 
-            Button(action: retry) {
-                HStack(spacing: 8) {
-                    if retrying {
-                        ProgressView().tint(.white)
+            VStack(spacing: 16) {
+                Button(action: retry) {
+                    HStack(spacing: 8) {
+                        if retrying {
+                            ProgressView().tint(.white)
+                        }
+                        Text(retrying ? "Trying again\u{2026}" : "Try Again")
+                            .font(.body.weight(.bold))
                     }
-                    Text(retrying ? "Trying again\u{2026}" : "Try Again")
-                        .font(.body.weight(.bold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.271, green: 0.467, blue: 0.714))
-            .disabled(retrying)
-        }
-    }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 0.271, green: 0.467, blue: 0.714))
+                .disabled(retrying)
 
-    private var footer: some View {
-        Button("Contact Support") {
-            toast.show("support@onehome.com \u{b7} (800) 555-0199")
+                Button("Contact Support") {
+                    toast.show("support@onehome.com \u{b7} (800) 555-0199")
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
+            }
+            .padding(.top, 8)
         }
-        .font(.subheadline.weight(.semibold))
-        .foregroundStyle(Color(red: 0.075, green: 0.478, blue: 0.561))
+        .padding(.horizontal, 32)
+        .frame(maxWidth: 420)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
+        .navigationBarBackButtonHidden(false)
     }
 
     private func retry() {

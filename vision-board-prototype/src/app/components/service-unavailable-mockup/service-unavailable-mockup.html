@@ -1,67 +1,31 @@
 <div class="su-page">
-  <div class="su-page__toggle" role="tablist" aria-label="Preview context">
-    <button
-      type="button"
-      class="su-page__toggle-btn"
-      [class.su-page__toggle-btn--active]="context() === 'splash'"
-      (click)="setContext('splash')"
-    >
-      Splash
+  <div class="su">
+    <h1 class="su__headline">It&rsquo;s not you, it&rsquo;s our wiring.</h1>
+    <p class="su__body">
+      We&rsquo;re having a quick hiccup connecting to our home listings right now. Your account is safe&mdash;just
+      give us a few minutes to get things back in order.
+    </p>
+
+    <img class="su__illustration" src="illustration-wet-floor-sign.png" alt="" aria-hidden="true" />
+
+    @if (stillDown()) {
+      <p class="su__still-down">
+        <app-icon name="info" color="#8a5a00" />
+        Still having trouble &mdash; we&rsquo;ll keep trying in the background.
+      </p>
+    }
+
+    <button type="button" class="su__retry-btn" [disabled]="retrying()" (click)="retry()">
+      @if (retrying()) {
+        <span class="su__spinner"></span> Trying again&hellip;
+      } @else {
+        Try Again
+      }
     </button>
-    <button
-      type="button"
-      class="su-page__toggle-btn"
-      [class.su-page__toggle-btn--active]="context() === 'login'"
-      (click)="setContext('login')"
-    >
-      Login
-    </button>
-  </div>
-
-  <div class="su-page__frame">
-    <div class="su">
-      <div class="su__card">
-        <h1 class="su__headline">It&rsquo;s not you, it&rsquo;s our wiring.</h1>
-        <p class="su__body">
-          We&rsquo;re having a quick hiccup connecting to our home listings right now. Your account is safe&mdash;just
-          give us a few minutes to get things back in order.
-        </p>
-
-        @if (context() === 'login') {
-          <div class="su__login-chrome" aria-hidden="true">
-            <span class="su__login-field-label">Email address</span>
-            <span class="su__login-field"></span>
-            <span class="su__login-field-label">Password</span>
-            <span class="su__login-field"></span>
-          </div>
-        }
-
-        <img class="su__illustration" src="illustration-wet-floor-sign.png" alt="" aria-hidden="true" />
-
-        @if (stillDown()) {
-          <p class="su__still-down">
-            <app-icon name="info" color="#8a5a00" />
-            Still having trouble &mdash; we&rsquo;ll keep trying in the background.
-          </p>
-        }
-
-        <button type="button" class="su__retry-btn" [disabled]="retrying()" (click)="retry()">
-          @if (retrying()) {
-            <span class="su__spinner"></span> Trying again&hellip;
-          } @else {
-            Try Again
-          }
-        </button>
-      </div>
-
-      <div class="su__footer">
-        <a class="su__support-link" (click)="contactSupport()">Contact Support</a>
-      </div>
-    </div>
+    <a class="su__support-link" (click)="contactSupport()">Contact Support</a>
   </div>
 
   <p class="su-page__note">
-    Preview only &mdash; the same fallback design covers both the splash and login entry points, since neither can
-    show anything meaningful without listing data. Tap &ldquo;Try Again&rdquo; twice to see the recovered state.
+    Preview only &mdash; not wired to a real backend. Tap &ldquo;Try Again&rdquo; twice to see the recovered state.
   </p>
 </div>

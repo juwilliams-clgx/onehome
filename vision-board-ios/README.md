@@ -133,29 +133,29 @@ gesture composition feels right on a real device.
 ## Service Unavailable fallback (preview)
 
 A reviewable concept, not a wired feature: neither platform has a real
-splash/login flow yet, so there's nothing to attach a genuine backend-down
+sign-in flow yet, so there's nothing to attach a genuine backend-down
 state to. `ServiceUnavailableView`, reached from the nav menu's new
 **Service Unavailable (Preview)** item, mirrors the web mockup
 ([service-unavailable-mockup](../vision-board-prototype/src/app/components/service-unavailable-mockup)):
-a Splash/Login segmented toggle over one shared card (neither screen can
-show anything meaningful without listing data, so one design serves both),
-the exact approved copy, and a two-step "Try Again" demo — first tap shows a
-"still having trouble" state, second tap simulates recovery.
+the exact approved copy and a two-step "Try Again" demo — first tap shows a
+"still having trouble" state, second tap simulates recovery. Covers the
+app's one entry point (sign-in); there's no separate splash flow to design
+for, and login fields are never shown on this screen in any scenario.
 
 Both platforms' layout is modeled directly on OneHome's real sign-in screen
 (a user-provided screenshot), not a generic error-page template: headline →
-body copy → (illustration, standing in for the form that can't render
-without a backend) → primary button → a separate footer strip for the
-secondary link — the same vertical hierarchy and the exact Sign In button
-color (`#4577b6`) as the real screen. No header banner or background color
-shift between the card and footer, per follow-up feedback simplifying
-toward a single flat white surface.
+body copy → illustration (standing in for the form that can't render
+without a backend) → primary button → secondary link, the same vertical
+hierarchy and the exact Sign In button color (`#4577b6`) as the real
+screen. It's a true responsive layout — content is centered in a readable
+column at any viewport width rather than boxed into a fixed phone-sized
+frame — so it reads correctly on web (desktop and mobile) and on both
+iPhone and iPad, not just a mobile browser.
 
 | Web pattern | iOS replacement | Why |
 |---|---|---|
 | User-provided `illustration-wet-floor-sign.png` ("it's not you, caution in progress") | Same PNG, downsampled with PIL into `Assets.xcassets/illustration-wet-floor-sign.imageset` as a 1x/2x/3x set (108/216/324pt wide, matching the source's native aspect ratio) | Already a raster asset, so no SVG-conversion step was needed this time; scaling down from the single high-res source avoids upscaling artifacts at any density |
-| Splash/Login pill toggle | Native `Picker` with `.pickerStyle(.segmented)` | A segmented control is the native, HIG-expected equivalent of a two-option toggle |
-| Faint, labeled Email/Password field outlines shown between body copy and the illustration in Login context | Same labels + `RoundedRectangle` outlines at reduced opacity, `allowsHitTesting(false)` | Direct port, positioned where the real form sits rather than floating separately |
+| `.su-page` flex-centers `.su` (`max-width: 420px`) in the full viewport | `VStack` with `.frame(maxWidth: 420)` centered in `.frame(maxWidth: .infinity, maxHeight: .infinity)` | Same "centered readable column, fills whatever space is available" approach, replacing the earlier fixed 390pt phone-frame mockup |
 | Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |
 | Two-attempt retry demo navigating to `/` on success | Same two-attempt counter, `dismiss()` on success (pops back to the real app) | Native has no root route to redirect to, so popping the preview off the stack is the equivalent "you're back in the app" signal |
 
