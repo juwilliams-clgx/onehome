@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren, effect, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren, computed, effect, inject, signal } from '@angular/core';
 import { MOCK_LISTINGS } from '../../mock-listings';
 import { Listing } from '../../models/listing.model';
 import { PropertyCardComponent } from '../property-card/property-card';
@@ -6,6 +6,8 @@ import { PropertyMapComponent } from '../property-map/property-map';
 import { IconComponent, IconName } from '../icon/icon';
 import { FilterSheetComponent, SortOption } from '../filter-sheet/filter-sheet';
 import { SearchHeaderComponent } from '../search-header/search-header';
+import { AiSearchPanelComponent } from '../ai-search-panel/ai-search-panel';
+import { AiSearchService } from '../../services/ai-search.service';
 
 export type GridLayout = 'split' | 'map' | 'grid' | 'table';
 /** Three-step split-view ratio: default (2/3 list, 1/3 map) -> wide (1/3 list, 2/3 map) -> full (map only). */
@@ -33,7 +35,14 @@ const MOBILE_QUERY = '(max-width: 640px)';
 @Component({
   selector: 'app-property-grid',
   standalone: true,
-  imports: [PropertyCardComponent, PropertyMapComponent, IconComponent, FilterSheetComponent, SearchHeaderComponent],
+  imports: [
+    PropertyCardComponent,
+    PropertyMapComponent,
+    IconComponent,
+    FilterSheetComponent,
+    SearchHeaderComponent,
+    AiSearchPanelComponent,
+  ],
   templateUrl: './property-grid.html',
   styleUrl: './property-grid.scss',
 })
@@ -45,10 +54,16 @@ export class PropertyGridComponent implements AfterViewInit, OnDestroy {
   /** One ref per rendered card, used to detect which listing has scrolled into view. */
   @ViewChildren('splitCard', { read: ElementRef }) private splitCardEls?: QueryList<ElementRef<HTMLElement>>;
 
-  protected readonly listings = MOCK_LISTINGS;
+  private readonly aiSearch = inject(AiSearchService);
+  /** Every listing, narrowed to the AI search panel's result ids when a conversational filter is active. */
+  protected readonly listings = computed(() => {
+    const ids = this.aiSearch.visibleListingIds();
+    return ids ? MOCK_LISTINGS.filter((l) => ids.includes(l.id)) : MOCK_LISTINGS;
+  });
   protected readonly layoutOptions = LAYOUT_OPTIONS;
   protected readonly layoutMenuOpen = signal(false);
   protected readonly mapSplitSize = signal<MapSplitSize>('default');
+
 
   protected readonly mapTools = MAP_TOOLS;
   protected readonly activeMapTools = signal(new Set<string>());
@@ -206,7 +221,7 @@ export class PropertyGridComponent implements AfterViewInit, OnDestroy {
           return;
         }
         const id = (mostVisible.target as HTMLElement).dataset['listingId'];
-        const listing = this.listings.find((l) => l.id === id);
+        const listing = this.listings().find((l) => l.id === id);
         if (listing) {
           this.propertyMap?.panToListing(listing);
         }

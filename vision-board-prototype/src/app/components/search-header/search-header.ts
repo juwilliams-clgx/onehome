@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { IconComponent } from '../icon/icon';
 import { CompareService } from '../../services/compare.service';
 import { LocationService } from '../../services/location.service';
-import { ToastService } from '../../services/toast.service';
+import { AiSearchService } from '../../services/ai-search.service';
 
 interface SavedSearch {
   id: string;
@@ -37,7 +37,7 @@ const MOCK_MY_SEARCHES: SavedSearch[] = [
 })
 export class SearchHeaderComponent {
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
+  private readonly aiSearch = inject(AiSearchService);
   protected readonly compare = inject(CompareService);
   protected readonly location = inject(LocationService);
 
@@ -99,6 +99,6 @@ export class SearchHeaderComponent {
   }
 
   searchWithAi(): void {
-    this.toast.show('Searching with AI...');
+    this.aiSearch.open();
   }
 }

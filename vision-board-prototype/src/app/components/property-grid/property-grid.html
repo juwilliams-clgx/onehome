@@ -6,7 +6,7 @@
       <app-icon name="sliders" /> Filter
     </button>
 
-    <span class="browse__count browse__count--mobile">{{ listings.length }} Results</span>
+    <span class="browse__count browse__count--mobile">{{ listings().length }} Results</span>
 
     <div class="layout-picker layout-picker--mobile">
       @if (!layoutMenuOpen()) {
@@ -31,7 +31,7 @@
     </div>
   </div>
 
-  <h2 class="browse__count browse__count--desktop">{{ listings.length }} Results</h2>
+  <h2 class="browse__count browse__count--desktop">{{ listings().length }} Results</h2>
 
   <div class="browse__filters">
     <button type="button" class="pill">For Sale</button>
@@ -71,7 +71,7 @@
   >
     @if ((layout() === 'grid' || layout() === 'split') && mapSplitSize() !== 'full') {
       <div class="browse__grid" #splitListEl>
-        @for (listing of listings; track listing.id) {
+        @for (listing of listings(); track listing.id) {
           <app-property-card
             #splitCard
             [attr.data-listing-id]="listing.id"
@@ -123,7 +123,7 @@
           }
         </div>
 
-        <app-property-map [listings]="listings" />
+        <app-property-map [listings]="listings()" />
       </div>
     }
 
@@ -140,7 +140,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (listing of listings; track listing.id) {
+          @for (listing of listings(); track listing.id) {
             <tr>
               <td>{{ formatPrice(listing.price) }}</td>
               <td>{{ listing.beds }}</td>
@@ -162,3 +162,5 @@
   (closed)="closeFilterSheet()"
   (sortChange)="selectSort($event)"
 />
+
+<app-ai-search-panel />

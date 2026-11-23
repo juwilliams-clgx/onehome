@@ -159,6 +159,30 @@ sign-in screen, not a generic error-page template.
 | Amber "still down" banner | Same copy/colors via `Label` + `info.circle.fill` | Direct port |
 | Two-attempt retry demo navigating to `/` on success | Same two-attempt counter, `dismiss()` on success (pops back to the real app) | Native has no root route to redirect to, so popping the preview off the stack is the equivalent "you're back in the app" signal |
 
+## AI Search (conversational search POC)
+
+A ChatGPT-style conversational search mode, opened from the search header's existing
+sparkle button (previously a stub with the comment "matching the web's placeholder AI search
+action"). Presented as a sheet over `ListingsBrowseView` rather than replacing it - the grid
+keeps updating underneath, and the understood criteria stay visible as removable chips.
+
+This is the one place in the whole app that talks to a real backend - everything else is
+client-side mock data. `AISearchStore` (`Stores/AISearchStore.swift`) POSTs the conversation
+to the same `../server/` Express backend the web prototype uses (`/api/ai-search`), which
+calls OpenAI with function-calling tools to turn natural language into a structured filter
+object, applies it deterministically against its own copy of the mock listings, and returns
+a conversational reply plus the matching listing ids. `ListingsBrowseView` narrows its
+`filteredListings` computed property to those ids whenever a conversational filter is
+active - the same "derive a filtered view from a shared store" pattern as
+`CompareStore`/`LocationStore`, just reached over the network instead of purely in-memory.
+See [`../server/README.md`](../server/README.md) to run the backend
+(`cd ../server && npm install && npm start`); without an `OPENAI_API_KEY` configured, the
+panel still works end-to-end, it just explains AI search isn't wired up yet.
+
+The endpoint URL (`http://localhost:4300`) assumes the Simulator, which shares the host
+Mac's network - a real device would need the Mac's LAN IP instead, which is out of scope for
+this POC.
+
 ## Structure
 
 ```
@@ -176,6 +200,7 @@ VisionBoardIOS/
     SavedPropertiesStore.swift Favorite/Dislike — ports saved-properties.service.ts
     VisionBoardStore.swift     Pin/unpin/capacity rules — ports vision-board.service.ts
     ToastCenter.swift          Ports toast.service.ts (5s auto-dismiss + undo)
+    AISearchStore.swift        Conversational search POC - calls ../server/, filters by returned listing ids
   Views/
     ContentView.swift          Root: hamburger header, nav menu, Buy/Rent vs My Properties
     NavMenuView.swift          Slide-in nav menu
@@ -197,6 +222,7 @@ VisionBoardIOS/
     AgentPhotoUploadView.swift  Agent batch photo review/crop/save workflow
     PhotoCropperView.swift      Reusable full-screen "pinch to fill" cropper
     ServiceUnavailableView.swift Splash/Login outage-fallback preview (not wired to a real flow)
+    AISearchPanelView.swift     Conversational search sheet - chat transcript + input, opened from the sparkle button
   Resources/
     MockListings.swift         Same 8 listings as mock-listings.ts (same coords, prices, photos)
     MockPhotos.swift           Same Unsplash stand-in photos as mock-photos.ts

@@ -18,6 +18,7 @@ struct SearchHeaderView: View {
 
     @Environment(CompareStore.self) private var compare
     @Environment(LocationStore.self) private var location
+    @Environment(AISearchStore.self) private var aiSearch
 
     @State private var dropdownOpen = false
     @State private var searchExpanded = false
@@ -128,7 +129,7 @@ struct SearchHeaderView: View {
             }
 
             Button {
-                // Stub, matching the web's placeholder AI search action.
+                aiSearch.open()
             } label: {
                 Image(systemName: "sparkles")
                     .foregroundStyle(Color(red: 0.486, green: 0.227, blue: 0.929))

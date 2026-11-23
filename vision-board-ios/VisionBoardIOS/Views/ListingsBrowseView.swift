@@ -11,10 +11,18 @@ struct ListingsBrowseView: View {
     var onSearchByPhoto: () -> Void = {}
 
     @Environment(BrowseStore.self) private var browse
+    @Environment(AISearchStore.self) private var aiSearch
     @State private var scrolledListingID: Listing.ID?
+
+    /// `listings`, narrowed to the AI search panel's result ids when a conversational filter is active.
+    private var filteredListings: [Listing] {
+        guard let ids = aiSearch.visibleListingIDs else { return listings }
+        return listings.filter { ids.contains($0.id) }
+    }
 
     var body: some View {
         @Bindable var browse = browse
+        @Bindable var aiSearch = aiSearch
 
         VStack(spacing: 0) {
             SearchHeaderView(onSearchByPhoto: onSearchByPhoto)
@@ -26,13 +34,16 @@ struct ListingsBrowseView: View {
             case .split:
                 splitContent
             case .map:
-                PropertyMapView(listings: listings)
+                PropertyMapView(listings: filteredListings)
             case .table:
                 tableContent
             }
         }
         .sheet(isPresented: $browse.filterSheetOpen) {
             FilterSortSheet()
+        }
+        .sheet(isPresented: $aiSearch.isOpen) {
+            AISearchPanelView()
         }
     }
 
@@ -49,7 +60,7 @@ struct ListingsBrowseView: View {
 
             Spacer()
 
-            Text("\(listings.count) Results")
+            Text("\(filteredListings.count) Results")
                 .font(.subheadline.weight(.bold))
                 .foregroundStyle(.secondary)
 
@@ -89,7 +100,7 @@ struct ListingsBrowseView: View {
     private var listContent: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(listings) { listing in
+                ForEach(filteredListings) { listing in
                     ListingCardView(listing: listing) { focusOnMap($0) }
                         .onTapGesture { onOpenPhotos(listing) }
                 }
@@ -101,12 +112,12 @@ struct ListingsBrowseView: View {
     private var splitContent: some View {
         GeometryReader { proxy in
             VStack(spacing: 0) {
-                PropertyMapView(listings: listings)
+                PropertyMapView(listings: filteredListings)
                     .frame(height: proxy.size.height / 2)
 
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(listings) { listing in
+                        ForEach(filteredListings) { listing in
                             ListingCardView(listing: listing) { focusOnMap($0) }
                                 .id(listing.id)
                                 .onTapGesture { onOpenPhotos(listing) }
@@ -125,7 +136,7 @@ struct ListingsBrowseView: View {
     }
 
     private var tableContent: some View {
-        List(listings) { listing in
+        List(filteredListings) { listing in
             HStack {
                 Text(listing.formattedPrice).bold()
                 Spacer()

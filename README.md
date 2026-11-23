@@ -12,6 +12,10 @@ buyer product) could go next, built in parallel on two platforms:
 - **[vision-board-ios/](vision-board-ios)** — a native SwiftUI iOS app mirroring the same
   feature set. A fully separate Xcode project on purpose (SwiftUI builds with Xcode's own
   toolchain and can't share a build system with the Angular app).
+- **[server/](server)** — a small Express backend, the first (and so far only) piece of
+  server-side code in this repo. Exists solely to hold an LLM API key server-side for the
+  conversational "AI Search" POC (see both apps' READMEs) — everything else in this project
+  is client-side mock data with no backend at all.
 
 Both apps are built from the same product truth, recorded once in **[PRODUCT.md](PRODUCT.md)**
 rather than duplicated per platform. Each app's own README documents platform-specific
@@ -26,7 +30,8 @@ tracks a running web → native translation table, updated every round).
 ├── PRODUCT.md                   Shared product context (read this first)
 ├── docs/                        Background evidence: usability findings, customer feedback
 ├── vision-board-prototype/      Web (Angular) — npm install && npm start
-└── vision-board-ios/            Native (SwiftUI) — open VisionBoardIOS.xcodeproj in Xcode
+├── vision-board-ios/            Native (SwiftUI) — open VisionBoardIOS.xcodeproj in Xcode
+└── server/                      AI Search POC backend — npm install && npm start (port 4300)
 ```
 
 ## Why one repo
@@ -49,3 +54,13 @@ npm start   # http://localhost:4200
 
 **iOS:** open `vision-board-ios/VisionBoardIOS.xcodeproj` in Xcode (15.4+, iOS 17
 deployment target) and run on the iPhone Simulator.
+
+**AI Search POC backend (optional, only needed for the conversational search feature):**
+```sh
+cd server
+npm install
+cp .env.example .env   # then add your own OPENAI_API_KEY
+npm start   # http://localhost:4300
+```
+Without an `OPENAI_API_KEY`, both apps' AI Search still work end-to-end — the chat panel
+just reports that AI search isn't configured yet, instead of failing.

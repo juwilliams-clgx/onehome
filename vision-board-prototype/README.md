@@ -48,6 +48,32 @@ npm start          # http://localhost:4200
 - Every photo an agent uploads is auto-cropped to a standardized 4:3 ratio by default, with a
   full-screen pinch-to-fill cropper for manual fine-tuning.
 
+## AI Search (conversational search POC)
+
+A ChatGPT-style conversational search mode, opened from the existing sparkle "AI Search"
+chip in the expanded search field (previously a stub that just showed a toast). Renders as a
+side panel on desktop / bottom sheet on mobile, sitting alongside the grid rather than
+replacing it — the grid keeps updating live as the conversation narrows things down, and the
+understood criteria stay visible as removable chips, so the filtering stays transparent
+instead of being a black box inside the chat.
+
+This is the one place in the whole prototype that talks to a real backend — everything else
+here is client-side mock data. `AiSearchService` (`src/app/services/ai-search.service.ts`)
+POSTs the conversation to `server/`'s `/api/ai-search` endpoint, which calls OpenAI with
+function-calling tools (`apply_filters` / `clear_filters`) to turn natural language into a
+structured filter object, applies that filter deterministically against its own copy of the
+mock listings, and returns both a conversational reply and the matching listing ids. The
+backend holds the API key so it's never exposed to the browser. See
+[`../server/README.md`](../server/README.md) for the backend itself, and run it with
+`cd ../server && npm install && npm start` to try this feature live (without an
+`OPENAI_API_KEY` configured, the panel still works end-to-end — it just explains that AI
+search isn't wired up yet, rather than failing).
+
+`property-grid.ts`'s `listings` became a `computed()` signal narrowed to
+`AiSearchService.visibleListingIds()` (previously a plain `MOCK_LISTINGS` reference) so the
+grid, map, and results count all update together whenever a conversational filter is applied
+or cleared.
+
 ## Development
 
 Standard Angular CLI commands apply: `ng generate component <name>`, `ng build`, `ng test`.

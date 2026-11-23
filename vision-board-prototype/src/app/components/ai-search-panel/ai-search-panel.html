@@ -1,0 +1,60 @@
+<div
+  class="ai-overlay"
+  [class.ai-overlay--open]="aiSearch.isOpen()"
+  [attr.aria-hidden]="!aiSearch.isOpen()"
+  (click)="close()"
+>
+  <div class="ai-panel" [class.ai-panel--open]="aiSearch.isOpen()" (click)="$event.stopPropagation()">
+    <div class="ai-panel__handle"></div>
+
+    <div class="ai-panel__header">
+      <div class="ai-panel__title">
+        <app-icon name="sparkle" color="#7c3aed" />
+        <h2>AI Search</h2>
+      </div>
+      <button type="button" class="ai-panel__close" aria-label="Close" (click)="close()">
+        <app-icon name="close" />
+      </button>
+    </div>
+
+    @if (aiSearch.activeFilters().length > 0) {
+      <div class="ai-panel__chips">
+        @for (chip of aiSearch.activeFilters(); track chip) {
+          <span class="ai-panel__chip">{{ chip }}</span>
+        }
+        <button type="button" class="ai-panel__chips-clear" (click)="clearFilters()">Clear</button>
+      </div>
+    }
+
+    <div class="ai-panel__scroll" #scrollEl>
+      @for (message of aiSearch.messages(); track $index) {
+        <div
+          class="ai-panel__bubble"
+          [class.ai-panel__bubble--user]="message.role === 'user'"
+          [class.ai-panel__bubble--assistant]="message.role === 'assistant'"
+        >
+          {{ message.content }}
+        </div>
+      }
+      @if (aiSearch.sending()) {
+        <div class="ai-panel__bubble ai-panel__bubble--assistant ai-panel__bubble--thinking">
+          <span></span><span></span><span></span>
+        </div>
+      }
+    </div>
+
+    <form class="ai-panel__input-row" (ngSubmit)="send()">
+      <input
+        type="text"
+        class="ai-panel__input"
+        placeholder="e.g. 3 bedroom homes under $900K in Austin"
+        [(ngModel)]="draft"
+        name="aiSearchDraft"
+        [disabled]="aiSearch.sending()"
+      />
+      <button type="submit" class="ai-panel__send" aria-label="Send" [disabled]="aiSearch.sending() || !draft.trim()">
+        <app-icon name="chevron-right" />
+      </button>
+    </form>
+  </div>
+</div>

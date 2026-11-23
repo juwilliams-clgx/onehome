@@ -8,6 +8,7 @@ struct VisionBoardIOSApp: App {
     @State private var browse = BrowseStore()
     @State private var compare = CompareStore()
     @State private var location = LocationStore()
+    @State private var aiSearch = AISearchStore()
 
     init() {
         let toast = ToastCenter()
@@ -24,6 +25,7 @@ struct VisionBoardIOSApp: App {
                 .environment(browse)
                 .environment(compare)
                 .environment(location)
+                .environment(aiSearch)
         }
     }
 }
