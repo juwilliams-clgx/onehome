@@ -48,10 +48,42 @@ and:
 dataset duplicated per target rather than a shared package, so this is a third copy
 following existing precedent rather than a new pattern.
 
+## Voice mode (the real thing, not speech-to-text)
+
+`POST /api/realtime-session` mints a short-lived ("ephemeral") token via OpenAI's
+`/v1/realtime/client_secrets` endpoint, scoped to a session with the same two tools, the
+same system prompt, and a chosen voice (`marin`). The long-lived `OPENAI_API_KEY` never
+leaves this server - only that ephemeral token (which expires quickly) is handed to the
+client, which uses it to open a direct, live voice-to-voice connection with OpenAI's
+Realtime API (the same technology behind ChatGPT's voice mode - not speech-to-text bolted
+onto the text endpoint above).
+
+- **Web** connects via WebRTC directly from the browser to `https://api.openai.com/v1/realtime/calls`
+  (OpenAI's recommended browser transport).
+- **iOS** connects via a direct WebSocket to `wss://api.openai.com/v1/realtime` instead,
+  since iOS has no built-in WebRTC framework and adding a third-party one (e.g. Google's
+  WebRTC via SPM) would be this project's first external dependency. A WebSocket + native
+  `AVAudioEngine` audio capture/playback is fully achievable with Apple's own frameworks and
+  is the transport OpenAI documents for non-browser clients.
+
+Either way, when the model decides to call `apply_filters`/`clear_filters` mid-conversation,
+the client POSTs the call to `POST /api/apply-filters` - the same tool executor
+(`runTool()` in `index.js`) the text path uses - rather than re-implementing filtering logic
+for voice. That keeps exactly one place in the codebase that knows how to actually filter
+listings, regardless of whether the user typed or spoke.
+
+Without an `OPENAI_API_KEY` configured, `/api/realtime-session` returns `503` with a clear
+error message, and both clients surface that instead of attempting (and failing) to open a
+voice connection.
+
 ## Known POC limitations
 
 - No real device support on iOS - `http://localhost:4300` only resolves from the Simulator
   (which shares the host Mac's network). A real device needs the Mac's LAN IP.
+- The iOS voice path is syntax-validated only (no Xcode available while building this) - the
+  live round trip (audio format correctness, actual back-and-forth conversation) needs
+  confirming on a real device with a real `OPENAI_API_KEY`. See
+  [`../vision-board-ios/README.md`](../vision-board-ios/README.md) for specifics.
 - No conversation persistence - history lives only in the client's in-memory store for the
   session.
 - `cors()` is wide open (`*`) for simplicity; a shipped version would restrict this to the

@@ -74,6 +74,28 @@ search isn't wired up yet, rather than failing).
 grid, map, and results count all update together whenever a conversational filter is applied
 or cleared.
 
+### Voice mode (the real thing, not speech-to-text)
+
+The mic button in the panel opens a genuine voice-to-voice conversation using OpenAI's
+Realtime API (the same technology behind ChatGPT's voice mode), not speech-to-text bolted
+onto the text path above. `AiSearchService.startVoice()`:
+
+1. Fetches a short-lived ("ephemeral") token from the backend's `/api/realtime-session` -
+   the real `OPENAI_API_KEY` never reaches the browser.
+2. Opens a WebRTC `RTCPeerConnection` directly to OpenAI (`https://api.openai.com/v1/realtime/calls`),
+   adds the mic as a local audio track, and plays the model's returned audio track through
+   a hidden `<audio>` element - OpenAI's own recommended browser transport.
+3. Listens on the connection's data channel for transcript events (so the same chat
+   transcript UI shows what was said on both sides) and `function_call` events. When the
+   model calls `apply_filters`/`clear_filters` mid-conversation, the client POSTs it to the
+   backend's `/api/apply-filters` (the same tool executor the text path uses) and sends the
+   result back over the data channel so the model can continue speaking with the real
+   answer (e.g. "Found 3 homes...").
+
+Function-call results update the exact same `activeFilters`/`visibleListingIds` signals the
+text path uses, so the grid filters identically regardless of whether the user typed or
+spoke.
+
 ## Development
 
 Standard Angular CLI commands apply: `ng generate component <name>`, `ng build`, `ng test`.

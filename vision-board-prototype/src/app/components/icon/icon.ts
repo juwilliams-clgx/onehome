@@ -36,7 +36,8 @@ export type IconName =
   | 'zoom-in'
   | 'zoom-out'
   | 'star'
-  | 'star-filled';
+  | 'star-filled'
+  | 'mic';
 
 let nextId = 0;
 

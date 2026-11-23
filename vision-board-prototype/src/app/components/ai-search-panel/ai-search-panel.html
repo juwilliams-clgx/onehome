@@ -17,6 +17,10 @@
       </button>
     </div>
 
+    @if (aiSearch.voiceState() === 'error' && aiSearch.voiceError()) {
+      <div class="ai-panel__voice-error">{{ aiSearch.voiceError() }}</div>
+    }
+
     @if (aiSearch.activeFilters().length > 0) {
       <div class="ai-panel__chips">
         @for (chip of aiSearch.activeFilters(); track chip) {
@@ -44,17 +48,37 @@
     </div>
 
     <form class="ai-panel__input-row" (ngSubmit)="send()">
-      <input
-        type="text"
-        class="ai-panel__input"
-        placeholder="e.g. 3 bedroom homes under $900K in Austin"
-        [(ngModel)]="draft"
-        name="aiSearchDraft"
-        [disabled]="aiSearch.sending()"
-      />
-      <button type="submit" class="ai-panel__send" aria-label="Send" [disabled]="aiSearch.sending() || !draft.trim()">
-        <app-icon name="chevron-right" />
+      @if (aiSearch.voiceState() === 'listening' || aiSearch.voiceState() === 'connecting') {
+        <div class="ai-panel__voice-status">
+          <span class="ai-panel__voice-dot" [class.ai-panel__voice-dot--pulsing]="aiSearch.voiceState() === 'listening'"></span>
+          {{ aiSearch.voiceState() === 'connecting' ? 'Connecting\u2026' : 'Listening\u2026 speak naturally' }}
+        </div>
+      } @else {
+        <input
+          type="text"
+          class="ai-panel__input"
+          placeholder="e.g. 3 bedroom homes under $900K in Austin"
+          [(ngModel)]="draft"
+          name="aiSearchDraft"
+          [disabled]="aiSearch.sending()"
+        />
+      }
+
+      <button
+        type="button"
+        class="ai-panel__mic"
+        [class.ai-panel__mic--active]="aiSearch.voiceState() === 'listening' || aiSearch.voiceState() === 'connecting'"
+        [attr.aria-label]="aiSearch.voiceState() === 'listening' ? 'Stop voice mode' : 'Start voice mode'"
+        (click)="toggleVoice()"
+      >
+        <app-icon name="mic" />
       </button>
+
+      @if (aiSearch.voiceState() !== 'listening' && aiSearch.voiceState() !== 'connecting') {
+        <button type="submit" class="ai-panel__send" aria-label="Send" [disabled]="aiSearch.sending() || !draft.trim()">
+          <app-icon name="chevron-right" />
+        </button>
+      }
     </form>
   </div>
 </div>

@@ -40,6 +40,7 @@
 		5532EDA6D2164A31A3702259 /* PhotoCropperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEB59F790CA4EF7A18CE2D8 /* PhotoCropperView.swift */; };
 		C70DF3A2875B44D089E5CE1A /* AgentListingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA2B19621FC475F88F57677 /* AgentListingsView.swift */; };
 		71BBD63BA37548C8BE1D4BE7 /* AgentPhotoUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA74189F0C24376AE6EC30C /* AgentPhotoUploadView.swift */; };
+		400231CD7F8A45E0ACB796BC /* RealtimeVoiceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4694F35D13E4F6DA8A6470B /* RealtimeVoiceSession.swift */; };
 		D34A5531DAFB45CDA91337EF /* AISearchPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D837C65BA09D4EAB814B12B4 /* AISearchPanelView.swift */; };
 		0A2EE2F8151C4207A2E7C915 /* AISearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4873D99A63DB4288A43A2525 /* AISearchStore.swift */; };
 		EC663D93D2274C37BEF3CBBB /* ServiceUnavailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04518645787495FA63F8512 /* ServiceUnavailableView.swift */; };
@@ -80,6 +81,7 @@
 		7EEB59F790CA4EF7A18CE2D8 /* PhotoCropperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCropperView.swift; sourceTree = "<group>"; };
 		0CA2B19621FC475F88F57677 /* AgentListingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentListingsView.swift; sourceTree = "<group>"; };
 		BBA74189F0C24376AE6EC30C /* AgentPhotoUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentPhotoUploadView.swift; sourceTree = "<group>"; };
+		A4694F35D13E4F6DA8A6470B /* RealtimeVoiceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeVoiceSession.swift; sourceTree = "<group>"; };
 		D837C65BA09D4EAB814B12B4 /* AISearchPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISearchPanelView.swift; sourceTree = "<group>"; };
 		4873D99A63DB4288A43A2525 /* AISearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISearchStore.swift; sourceTree = "<group>"; };
 		C04518645787495FA63F8512 /* ServiceUnavailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUnavailableView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				7FF140136D88494491CB99F8 /* ToastCenter.swift */,
 				A3F479E23A7D44F0ACE4B898 /* VisionBoardStore.swift */,
 				4873D99A63DB4288A43A2525 /* AISearchStore.swift */,
+				A4694F35D13E4F6DA8A6470B /* RealtimeVoiceSession.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				5532EDA6D2164A31A3702259 /* PhotoCropperView.swift in Sources */,
 				C70DF3A2875B44D089E5CE1A /* AgentListingsView.swift in Sources */,
 				71BBD63BA37548C8BE1D4BE7 /* AgentPhotoUploadView.swift in Sources */,
+				400231CD7F8A45E0ACB796BC /* RealtimeVoiceSession.swift in Sources */,
 				D34A5531DAFB45CDA91337EF /* AISearchPanelView.swift in Sources */,
 				0A2EE2F8151C4207A2E7C915 /* AISearchStore.swift in Sources */,
 				EC663D93D2274C37BEF3CBBB /* ServiceUnavailableView.swift in Sources */,
@@ -426,6 +430,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "OneHome uses your location to default your search to your area.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "OneHome uses your microphone for the AI Search voice mode.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -454,6 +459,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "OneHome uses your location to default your search to your area.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "OneHome uses your microphone for the AI Search voice mode.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

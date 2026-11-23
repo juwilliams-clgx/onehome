@@ -183,6 +183,43 @@ The endpoint URL (`http://localhost:4300`) assumes the Simulator, which shares t
 Mac's network - a real device would need the Mac's LAN IP instead, which is out of scope for
 this POC.
 
+### Voice mode (the real thing, not speech-to-text) - unverified beyond syntax
+
+The mic button opens a genuine voice-to-voice conversation via OpenAI's Realtime API (the
+same technology behind ChatGPT's voice mode), implemented in the new
+`RealtimeVoiceSession.swift`. This is the one place web and native genuinely diverge in
+*how* (not just translating the same approach):
+
+- **Web** connects via WebRTC, the transport OpenAI recommends for browsers.
+- **iOS has no built-in WebRTC framework.** Adding one (e.g. Google's WebRTC via SPM) would
+  be this app's first-ever external dependency, and I can't verify a new SPM dependency
+  resolves/links/builds correctly in this environment (no Xcode, no package registry
+  access). Instead, `RealtimeVoiceSession` uses a **direct WebSocket** connection
+  (`URLSessionWebSocketTask` to `wss://api.openai.com/v1/realtime`) with `AVAudioEngine` for
+  mic capture and playback - both are Apple's own frameworks (`Foundation`/`AVFoundation`,
+  already linked), so no new dependency is introduced. This is also the transport OpenAI
+  itself documents for non-browser clients, not a workaround.
+
+Same backend, same ephemeral-token flow, same shared `/api/apply-filters` tool executor as
+web - only the transport and the audio plumbing (WebSocket text frames + manual PCM16
+encode/decode instead of WebRTC's built-in audio tracks) differ. `AISearchStore` owns a
+`RealtimeVoiceSession` and relays its callbacks (transcript, function call, state, error)
+into the same `messages`/`activeFilters`/`visibleListingIDs` properties the text path
+already uses.
+
+**Honest status:** this is validated only via `swiftc -parse` and `project.pbxproj`
+integrity checks, the same ceiling as every other native feature this session, since no
+Xcode/Simulator/device is available here. What that *does* confirm: the Swift is
+syntactically valid and the project file won't fail to open. What it does **not** confirm:
+that the 24kHz PCM16 mono format assumption matches what the Realtime API actually expects,
+that `AVAudioEngine`'s mixer correctly handles an Int16-format player-node connection (flagged
+inline in the code - Float32 is the more common path and worth trying first if audio is
+silent/garbled), or that a live spoken conversation and function call actually complete
+end-to-end. All of that needs a real device, a real `OPENAI_API_KEY`, and someone to talk
+to it before this is "working," not just "written." A new `NSMicrophoneUsageDescription`
+entry was added to both build configurations in `project.pbxproj` for the mic permission
+prompt this requires.
+
 ## Structure
 
 ```
@@ -201,6 +238,7 @@ VisionBoardIOS/
     VisionBoardStore.swift     Pin/unpin/capacity rules — ports vision-board.service.ts
     ToastCenter.swift          Ports toast.service.ts (5s auto-dismiss + undo)
     AISearchStore.swift        Conversational search POC - calls ../server/, filters by returned listing ids
+    RealtimeVoiceSession.swift Voice-to-voice via Realtime API over WebSocket (no WebRTC dependency) - unverified beyond syntax
   Views/
     ContentView.swift          Root: hamburger header, nav menu, Buy/Rent vs My Properties
     NavMenuView.swift          Slide-in nav menu

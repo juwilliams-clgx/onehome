@@ -9,7 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const client = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
+const apiKey = process.env.OPENAI_API_KEY;
+const client = apiKey ? new OpenAI({ apiKey }) : null;
 
 const SYSTEM_PROMPT = `You are OneHome's conversational search assistant, helping a home buyer narrow down
 listings through natural conversation (similar to a ChatGPT-style conversational search mode). You have
@@ -19,36 +20,40 @@ reset/see everything again, rather than just describing listings yourself. Keep 
 conversational (1-2 sentences). If a message is a clarifying question with no filterable criteria yet
 (e.g. "what can you help me find?"), you may reply without calling a tool.`;
 
-const TOOLS = [
+/**
+ * Canonical tool definitions, in the Realtime API's flat shape
+ * ({ type, name, description, parameters }). The Chat Completions API (used
+ * by the text /api/ai-search path) wants the same fields nested one level
+ * deeper under "function" instead - CHAT_TOOLS below just re-shapes these
+ * rather than maintaining two separate schemas that could drift apart.
+ */
+const TOOL_DEFS = [
   {
-    type: 'function',
-    function: {
-      name: 'apply_filters',
-      description:
-        "Filter the home listings by whatever criteria the user has described so far in the conversation. Only include fields the user actually specified or implied; omit anything unspecified.",
-      parameters: {
-        type: 'object',
-        properties: {
-          minPrice: { type: 'number', description: 'Minimum price in dollars' },
-          maxPrice: { type: 'number', description: 'Maximum price in dollars' },
-          minBeds: { type: 'number', description: 'Minimum number of bedrooms' },
-          minBaths: { type: 'number', description: 'Minimum number of bathrooms' },
-          city: { type: 'string', description: 'City name, e.g. "Austin"' },
-          state: { type: 'string', description: 'Two-letter state code, e.g. "TX"' },
-          status: { type: 'string', enum: ['For Sale', 'Pending', 'Sold'] },
-        },
+    name: 'apply_filters',
+    description:
+      "Filter the home listings by whatever criteria the user has described so far in the conversation. Only include fields the user actually specified or implied; omit anything unspecified.",
+    parameters: {
+      type: 'object',
+      properties: {
+        minPrice: { type: 'number', description: 'Minimum price in dollars' },
+        maxPrice: { type: 'number', description: 'Maximum price in dollars' },
+        minBeds: { type: 'number', description: 'Minimum number of bedrooms' },
+        minBaths: { type: 'number', description: 'Minimum number of bathrooms' },
+        city: { type: 'string', description: 'City name, e.g. "Austin"' },
+        state: { type: 'string', description: 'Two-letter state code, e.g. "TX"' },
+        status: { type: 'string', enum: ['For Sale', 'Pending', 'Sold'] },
       },
     },
   },
   {
-    type: 'function',
-    function: {
-      name: 'clear_filters',
-      description: 'Reset the search back to showing every listing (the user wants to start over or see everything again).',
-      parameters: { type: 'object', properties: {} },
-    },
+    name: 'clear_filters',
+    description: 'Reset the search back to showing every listing (the user wants to start over or see everything again).',
+    parameters: { type: 'object', properties: {} },
   },
 ];
+
+const CHAT_TOOLS = TOOL_DEFS.map((t) => ({ type: 'function', function: t }));
+const REALTIME_TOOLS = TOOL_DEFS.map((t) => ({ type: 'function', ...t }));
 
 function applyFilters(filters) {
   const f = filters || {};
@@ -78,6 +83,21 @@ function summarizeFilters(filters) {
   return chips;
 }
 
+/** Runs a named tool call (apply_filters/clear_filters) against the shared listings dataset - the one
+ *  place this actually happens, called by both the text path (below) and the voice path's function-call
+ *  handler (client posts here after the Realtime session reports a completed function call). */
+function runTool(name, args) {
+  const isClear = name === 'clear_filters';
+  const filters = isClear ? null : args || {};
+  const matches = isClear ? LISTINGS : applyFilters(filters);
+  return {
+    filters: isClear ? null : summarizeFilters(filters),
+    matchingIds: isClear ? null : matches.map((m) => m.id),
+    matchCount: matches.length,
+    matchSummaries: matches.map((m) => `${m.address}, ${m.city} ${m.state} - $${m.price.toLocaleString()}`),
+  };
+}
+
 app.post('/api/ai-search', async (req, res) => {
   const messages = Array.isArray(req.body?.messages) ? req.body.messages : [];
 
@@ -95,7 +115,7 @@ app.post('/api/ai-search', async (req, res) => {
     const first = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
-      tools: TOOLS,
+      tools: CHAT_TOOLS,
       tool_choice: 'auto',
     });
 
@@ -107,9 +127,8 @@ app.post('/api/ai-search', async (req, res) => {
       return;
     }
 
-    const isClear = toolCall.function.name === 'clear_filters';
-    const filters = isClear ? null : JSON.parse(toolCall.function.arguments || '{}');
-    const matches = isClear ? LISTINGS : applyFilters(filters);
+    const args = JSON.parse(toolCall.function.arguments || '{}');
+    const result = runTool(toolCall.function.name, args);
 
     const second = await client.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -120,23 +139,78 @@ app.post('/api/ai-search', async (req, res) => {
         {
           role: 'tool',
           tool_call_id: toolCall.id,
-          content: JSON.stringify({
-            matchCount: matches.length,
-            matches: matches.map((m) => `${m.address}, ${m.city} ${m.state} - $${m.price.toLocaleString()}`),
-          }),
+          content: JSON.stringify({ matchCount: result.matchCount, matches: result.matchSummaries }),
         },
       ],
     });
 
     res.json({
-      reply: second.choices[0].message.content ?? `Found ${matches.length} matching listings.`,
-      filters: isClear ? null : summarizeFilters(filters),
-      matchingIds: isClear ? null : matches.map((m) => m.id),
+      reply: second.choices[0].message.content ?? `Found ${result.matchCount} matching listings.`,
+      filters: result.filters,
+      matchingIds: result.matchingIds,
     });
   } catch (err) {
     console.error('[ai-search] error', err);
     res.status(500).json({ reply: "Something went wrong reaching the AI search service. Please try again.", filters: null, matchingIds: null });
   }
+});
+
+/**
+ * Mints a short-lived ("ephemeral") token the browser/app can use to open a
+ * direct WebRTC voice session with OpenAI's Realtime API - this is the real
+ * voice-to-voice mode (not speech-to-text bolted onto the text endpoint
+ * above). The long-lived OPENAI_API_KEY never leaves this server; only the
+ * ephemeral token (scoped, short expiry) is handed to the client.
+ * See https://platform.openai.com/docs/guides/realtime-webrtc
+ */
+app.post('/api/realtime-session', async (req, res) => {
+  if (!apiKey) {
+    res.status(503).json({ error: "AI search isn't wired up yet \u2014 ask your developer to add an OPENAI_API_KEY to server/.env to enable it." });
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: {
+          type: 'realtime',
+          model: 'gpt-realtime',
+          instructions: SYSTEM_PROMPT,
+          audio: { output: { voice: 'marin' } },
+          tools: REALTIME_TOOLS,
+          tool_choice: 'auto',
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('[realtime-session] OpenAI error', response.status, text);
+      res.status(502).json({ error: 'Failed to start a voice session with OpenAI.' });
+      return;
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error('[realtime-session] error', err);
+    res.status(500).json({ error: 'Failed to start a voice session.' });
+  }
+});
+
+/** Shared tool executor for the voice path - see runTool() above. */
+app.post('/api/apply-filters', (req, res) => {
+  const { name, arguments: args } = req.body || {};
+  if (name !== 'apply_filters' && name !== 'clear_filters') {
+    res.status(400).json({ error: 'Unknown tool name' });
+    return;
+  }
+  res.json(runTool(name, args));
 });
 
 app.listen(PORT, () => {

@@ -50,4 +50,13 @@ export class AiSearchPanelComponent {
   clearFilters(): void {
     this.aiSearch.clearFilters();
   }
+
+  toggleVoice(): void {
+    const state = this.aiSearch.voiceState();
+    if (state === 'listening' || state === 'connecting') {
+      this.aiSearch.stopVoice();
+    } else {
+      this.aiSearch.startVoice();
+    }
+  }
 }
