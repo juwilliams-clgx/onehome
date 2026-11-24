@@ -71,7 +71,6 @@ struct SearchHeaderView: View {
                         withAnimation { dropdownOpen.toggle() }
                     } label: {
                         HStack {
-                            Image(systemName: "magnifyingglass")
                             Text(pillLabel)
                                 .lineLimit(1)
                                 .frame(maxWidth: .infinity, alignment: .leading)

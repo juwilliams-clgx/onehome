@@ -5,7 +5,7 @@
     aria-label="Compare"
     routerLink="/compare"
   >
-    <app-icon name="compare-swap" />
+    <app-icon name="compare-swap" color="#137a8f" />
     @if (compare.count() > 0) {
       <span class="search-header__badge">{{ compare.count() }}</span>
     }
@@ -13,7 +13,6 @@
 
   @if (!searchExpanded()) {
     <button type="button" class="search-header__pill" (click)="toggleDropdown()">
-      <app-icon name="search" />
       <span>{{ pillLabel() }}</span>
       <app-icon name="chevron-down" class="search-header__chevron" [class.search-header__chevron--open]="dropdownOpen()" />
     </button>
